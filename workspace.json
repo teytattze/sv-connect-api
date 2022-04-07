@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "projects": {
+    "api-accounts": "apps/api-accounts",
+    "api-auth": "apps/api-auth",
+    "api-fields": "apps/api-fields",
+    "api-gateway": "apps/api-gateway",
+    "api-invitations": "apps/api-invitations",
+    "api-matches": "apps/api-matches",
+    "api-profiles": "apps/api-profiles",
+    "api-projects": "apps/api-projects",
+    "api-specializations": "apps/api-specializations",
+    "api-students": "apps/api-students",
+    "api-supervisors": "apps/api-supervisors",
+    "app-common": "libs/app-common",
+    "core-common": "libs/core-common",
+    "core-domain": "libs/core-domain",
+    "prisma": "libs/prisma"
+  }
+}

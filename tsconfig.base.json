@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sv-connect/app-common": ["libs/app-common/src/index.ts"],
+      "@sv-connect/core-common": ["libs/core-common/src/index.ts"],
+      "@sv-connect/core-domain": ["libs/core-domain/src/index.ts"],
+      "@sv-connect/prisma": ["libs/prisma/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
