@@ -4,8 +4,10 @@ import { IProfile } from './profile.interface';
 
 export interface IProfilesService {
   createProfile(payload: ICreateProfilePayload): Promise<IProfile>;
+  getProfileById(id: string): Promise<IProfile>;
+  getProfileByAccountId(accountId: string): Promise<IProfile>;
   updateProfileByAccountId(
     accountId: string,
-    payload: IUpdateProfilePayload,
+    payload: IUpdateProfilePayload
   ): Promise<IProfile>;
 }
