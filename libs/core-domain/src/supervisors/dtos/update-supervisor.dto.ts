@@ -1,10 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  UpdateManySpecializationsRelationBody,
-  UpdateOneFieldRelationBody,
+  ConnectSpecializationBody,
+  ConnectFieldBody,
 } from '@sv-connect/core-common';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsUUID, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsOptional,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 import { IUpdateSupervisorPayload } from '../payloads/update-supervisor.payload';
 
 export class UpdateSupervisorBody implements IUpdateSupervisorPayload {
@@ -15,15 +21,16 @@ export class UpdateSupervisorBody implements IUpdateSupervisorPayload {
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateOneFieldRelationBody)
-  @ApiPropertyOptional({ type: UpdateOneFieldRelationBody })
-  field?: UpdateOneFieldRelationBody;
+  @Type(() => ConnectFieldBody)
+  @ApiPropertyOptional({ type: ConnectFieldBody })
+  field?: ConnectFieldBody;
 
   @IsOptional()
-  @ValidateNested()
-  @Type(() => UpdateManySpecializationsRelationBody)
-  @ApiPropertyOptional({ type: UpdateManySpecializationsRelationBody })
-  specializations?: UpdateManySpecializationsRelationBody;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ConnectSpecializationBody)
+  @ApiPropertyOptional({ type: ConnectSpecializationBody, isArray: true })
+  specializations?: ConnectSpecializationBody[];
 }
 
 export class UpdateSupervisorByIdParam {

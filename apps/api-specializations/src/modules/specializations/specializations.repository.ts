@@ -56,10 +56,7 @@ export class SpecializationsRepository {
       where: { id: by.id, title: by.title },
       data: {
         title: payload.title,
-        fields: {
-          connect: payload.fields?.connect,
-          disconnect: payload.fields?.disconnect,
-        },
+        fields: { set: payload.fields },
       },
       select: this.defaultSelect,
     })) as ISpecialization;

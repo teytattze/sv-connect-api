@@ -65,14 +65,8 @@ export class ProjectsRepository {
       data: {
         title: payload.title,
         summary: payload.summary,
-        field: {
-          connect: payload.field.connect,
-          disconnect: payload.field.disconnect,
-        },
-        specializations: {
-          connect: payload.specializations.connect,
-          disconnect: payload.specializations.disconnect,
-        },
+        field: { connect: payload.field },
+        specializations: { set: payload.specializations },
       },
       select: this.defaultSelect,
     })) as IProject;

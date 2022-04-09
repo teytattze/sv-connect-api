@@ -1,7 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UpdateManyFieldsRelationBody } from '@sv-connect/core-common';
+import { ConnectFieldBody } from '@sv-connect/core-common';
 import { Type } from 'class-transformer';
-import { IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 import { IUpdateSpecializationPayload } from '../payloads/update-specialization.payload';
 
 export class UpdateSpecializationBody implements IUpdateSpecializationPayload {
@@ -11,10 +17,11 @@ export class UpdateSpecializationBody implements IUpdateSpecializationPayload {
   title?: string;
 
   @IsOptional()
-  @ValidateNested()
-  @Type(() => UpdateManyFieldsRelationBody)
-  @ApiPropertyOptional({ type: UpdateManyFieldsRelationBody })
-  fields?: UpdateManyFieldsRelationBody;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ConnectFieldBody)
+  @ApiPropertyOptional({ type: ConnectFieldBody, isArray: true })
+  fields?: ConnectFieldBody[];
 }
 
 export class UpdateSpecializationByIdParam {

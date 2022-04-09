@@ -59,9 +59,7 @@ export class StudentsRepository {
         accountId: by.accountId,
       },
       data: {
-        supervisor: {
-          connect: payload.supervisor?.connect,
-        },
+        supervisor: { connect: payload.supervisor },
       },
       select: this.defaultSelect,
     })) as IStudent;

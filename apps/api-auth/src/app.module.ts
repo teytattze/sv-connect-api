@@ -3,6 +3,7 @@ import {
   ACCOUNTS_CLIENT,
   ClientsProvider,
   IClientsProviderOptions,
+  PROFILES_CLIENT,
 } from '@sv-connect/app-common';
 import config from 'config';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
@@ -12,6 +13,10 @@ const clientsProviderOptions: IClientsProviderOptions[] = [
   {
     provide: ACCOUNTS_CLIENT,
     transport: config.get('microservices.accounts'),
+  },
+  {
+    provide: PROFILES_CLIENT,
+    transport: config.get('microservices.profiles'),
   },
 ];
 

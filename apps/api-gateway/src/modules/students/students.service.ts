@@ -32,4 +32,21 @@ export class StudentsService implements IStudentsClient {
     if (error) throw CoreHttpException.fromService(error);
     return response;
   }
+
+  async getStudentByAccountId(
+    accountId: string
+  ): Promise<ICoreServiceResponse<IStudent>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<IStudent>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(StudentsPattern.GET_STUDENT_BY_ACCOUNT_ID, {
+          accountId,
+        })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
 }

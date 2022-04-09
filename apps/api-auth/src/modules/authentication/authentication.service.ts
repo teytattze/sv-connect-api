@@ -1,16 +1,63 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IAccount, ILoginPayload } from '@sv-connect/core-domain';
+import {
+  IAccount,
+  IAuthenticationService,
+  IAuthToken,
+  IRegisterPayload,
+  ILoginPayload,
+} from '@sv-connect/core-domain';
 import * as bcrypt from 'bcryptjs';
 import _ from 'lodash';
 import { AdminAccountsService } from '../accounts/accounts.admin.service';
+import { AccountsService } from '../accounts/accounts.service';
+import { ProfilesService } from '../profiles/profiles.service';
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationService implements IAuthenticationService {
   constructor(
+    private readonly accountsService: AccountsService,
     private readonly adminAcountsService: AdminAccountsService,
+    private readonly profilesService: ProfilesService,
     private readonly jwtService: JwtService
   ) {}
+
+  async register({
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+  }: IRegisterPayload): Promise<{
+    account: IAccount;
+    accessToken: string;
+  }> {
+    const { data: account } = await this.accountsService.createAccount({
+      email,
+      password,
+      role,
+    });
+    await this.profilesService.createProfile({
+      firstName,
+      lastName,
+      account: { id: account.id },
+    });
+    const { accessToken } = await this.login(account);
+    return { account, accessToken };
+  }
+
+  async login(account: IAccount): Promise<IAuthToken> {
+    const payload = {
+      sub: account.id,
+      account,
+    };
+    const accessToken = this.jwtService.sign(payload);
+    return { accessToken };
+  }
+
+  validateJwt(jwtAccount: IAccount, cookieAccount: IAccount): boolean {
+    return _.isEqual(jwtAccount, cookieAccount);
+  }
 
   async validateAccount({ email, password }: ILoginPayload): Promise<IAccount> {
     const { data: account } = await this.adminAcountsService.getAccountByEmail(
@@ -26,19 +73,6 @@ export class AuthenticationService {
       return account;
     }
     return null;
-  }
-
-  async login(account: IAccount): Promise<{ accessToken: string }> {
-    const payload = {
-      sub: account.id,
-      account,
-    };
-    const accessToken = this.jwtService.sign(payload);
-    return { accessToken };
-  }
-
-  validateJwt(jwtAccount: IAccount, cookieAccount: IAccount): boolean {
-    return _.isEqual(jwtAccount, cookieAccount);
   }
 
   private async compareHashedPassword(

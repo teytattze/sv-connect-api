@@ -4,6 +4,7 @@ import { CoreHttpResponse } from '@sv-connect/core-common';
 import {
   CreateProjectBody,
   GetProjectByIdParam,
+  GetProjectByStudentIdParam,
   ProjectDto,
   UpdateProjectBody,
   UpdateProjectByIdParam,
@@ -28,6 +29,16 @@ export class ProjectsController {
     @Param() { id }: GetProjectByIdParam
   ): Promise<CoreHttpResponse<ProjectDto>> {
     const { data } = await this.projectsService.getProjectById(id);
+    return CoreHttpResponse.success({ data });
+  }
+
+  @Get('students/:studentId')
+  async getProjectByStudentId(
+    @Param() { studentId }: GetProjectByStudentIdParam
+  ) {
+    const { data } = await this.projectsService.getProjectByStudentId(
+      studentId
+    );
     return CoreHttpResponse.success({ data });
   }
 

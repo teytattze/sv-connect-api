@@ -56,10 +56,7 @@ export class FieldsRepository {
       where: { id: by.id, title: by.title },
       data: {
         title: payload.title,
-        specializations: {
-          connect: payload.specializations?.connect,
-          disconnect: payload.specializations?.disconnect,
-        },
+        specializations: { set: payload.specializations },
       },
       select: this.defaultSelect,
     })) as IField;

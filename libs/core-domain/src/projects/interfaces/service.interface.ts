@@ -9,7 +9,7 @@ export interface IProjectsService {
   createProject(payload: ICreateProjectPayload): Promise<IProject>;
   updateProjectById(
     id: string,
-    payload: IUpdateProjectPayload,
+    payload: IUpdateProjectPayload
   ): Promise<IProject>;
   deleteProjectById(id: string): Promise<void>;
 }

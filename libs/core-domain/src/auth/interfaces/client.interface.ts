@@ -1,8 +1,10 @@
-import { ICoreServiceResponse } from '@sv-connect/core-common';
+import { ICoreHttpResponse } from '@sv-connect/core-common';
+import { IAccount } from '../../accounts';
 import { ILoginPayload } from '../payloads/login.payload';
-import { IAuthToken } from './auth-tokens.interface';
+import { IRegisterPayload } from '../payloads/register.payload';
 
-export interface IAuthClient {
-  login?(payload: ILoginPayload): Promise<ICoreServiceResponse<IAuthToken>>;
-  logout?(accountId: string): Promise<ICoreServiceResponse<null>>;
+export interface IAuthenticationClient {
+  register?(payload: IRegisterPayload): Promise<ICoreHttpResponse<IAccount>>;
+  login?(payload: ILoginPayload): Promise<ICoreHttpResponse<IAccount>>;
+  logout?(accountId: string): Promise<ICoreHttpResponse<null>>;
 }

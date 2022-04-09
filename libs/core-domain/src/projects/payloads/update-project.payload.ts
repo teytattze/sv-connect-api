@@ -1,11 +1,11 @@
 import {
-  IUpdateManySpecializationsRelationPayload,
-  IUpdateOneFieldRelationPayload,
+  IConnectFieldPayload,
+  IConnectSpecializationPayload,
 } from '@sv-connect/core-common';
 
 export interface IUpdateProjectPayload {
   title?: string;
   summary?: string;
-  field?: IUpdateOneFieldRelationPayload;
-  specializations?: IUpdateManySpecializationsRelationPayload;
+  field?: IConnectFieldPayload;
+  specializations?: IConnectSpecializationPayload[];
 }

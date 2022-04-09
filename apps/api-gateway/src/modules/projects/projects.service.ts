@@ -31,6 +31,23 @@ export class ProjectsService implements IProjectsClient {
     return response;
   }
 
+  async getProjectByStudentId(
+    studentId: string
+  ): Promise<ICoreServiceResponse<IProject>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<IProject>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(ProjectsPattern.GET_PROJECT_BY_STUDENT_ID, {
+          studentId,
+        })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
+
   async createProject(
     payload: ICreateProjectPayload
   ): Promise<ICoreServiceResponse<IProject>> {

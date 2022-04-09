@@ -71,14 +71,8 @@ export class SupervisorsRepository {
       },
       data: {
         capacity: payload.capacity,
-        field: {
-          connect: payload.field.connect,
-          disconnect: payload.field.disconnect,
-        },
-        specializations: {
-          connect: payload.specializations.connect,
-          disconnect: payload.specializations.disconnect,
-        },
+        field: { connect: payload.field },
+        specializations: { set: payload.specializations },
       },
       select: this.defaultSelect,
     })) as ISupervisor;

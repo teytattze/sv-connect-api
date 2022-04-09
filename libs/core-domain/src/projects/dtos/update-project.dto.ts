@@ -1,10 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  UpdateManySpecializationsRelationBody,
-  UpdateOneFieldRelationBody,
+  ConnectFieldBody,
+  ConnectSpecializationBody,
 } from '@sv-connect/core-common';
 import { Type } from 'class-transformer';
-import { IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 import { IUpdateProjectPayload } from '../payloads/update-project.payload';
 
 export class UpdateProjectBody implements IUpdateProjectPayload {
@@ -20,15 +26,16 @@ export class UpdateProjectBody implements IUpdateProjectPayload {
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateOneFieldRelationBody)
-  @ApiPropertyOptional({ type: UpdateOneFieldRelationBody })
-  field?: UpdateOneFieldRelationBody;
+  @Type(() => ConnectFieldBody)
+  @ApiPropertyOptional({ type: ConnectFieldBody })
+  field?: ConnectFieldBody;
 
   @IsOptional()
-  @ValidateNested()
-  @Type(() => UpdateManySpecializationsRelationBody)
-  @ApiPropertyOptional({ type: UpdateManySpecializationsRelationBody })
-  specializations?: UpdateManySpecializationsRelationBody;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ConnectSpecializationBody)
+  @ApiPropertyOptional({ type: ConnectSpecializationBody, isArray: true })
+  specializations?: ConnectSpecializationBody[];
 }
 
 export class UpdateProjectByIdParam {

@@ -642,6 +642,29 @@
         ]
       }
     },
+    "/api/projects/students/{studentId}": {
+      "get": {
+        "operationId": "getProjectByStudentId",
+        "parameters": [
+          {
+            "name": "studentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
     "/api/projects/update/{id}": {
       "put": {
         "operationId": "updateProjectById",
@@ -660,7 +683,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateProjectBody"
+                "$ref": "#/components/schemas/UpdateProjectBodyNew"
               }
             }
           }
@@ -808,6 +831,29 @@
         },
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Students"
+        ]
+      }
+    },
+    "/api/students/accounts/{accountId}": {
+      "get": {
+        "operationId": "getStudentByAccountId",
+        "parameters": [
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
             "description": ""
           }
         },
@@ -1282,18 +1328,7 @@
           "student"
         ]
       },
-      "UpdateOneFieldRelationBody": {
-        "type": "object",
-        "properties": {
-          "connect": {
-            "$ref": "#/components/schemas/ConnectFieldBody"
-          },
-          "disconnect": {
-            "type": "boolean"
-          }
-        }
-      },
-      "UpdateProjectBody": {
+      "UpdateProjectBodyNew": {
         "type": "object",
         "properties": {
           "title": {
@@ -1303,10 +1338,13 @@
             "type": "string"
           },
           "field": {
-            "$ref": "#/components/schemas/UpdateOneFieldRelationBody"
+            "$ref": "#/components/schemas/ConnectFieldBody"
           },
           "specializations": {
-            "$ref": "#/components/schemas/UpdateManySpecializationsRelationBody"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectSpecializationBody"
+            }
           }
         }
       },

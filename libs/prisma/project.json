@@ -22,6 +22,16 @@
         ]
       }
     },
+    "studio": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "pnpx prisma studio --schema=libs/prisma/src/schema.prisma"
+          }
+        ]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

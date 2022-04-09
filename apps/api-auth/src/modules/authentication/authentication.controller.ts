@@ -1,9 +1,17 @@
-import { Controller, Post, Req, Response, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  Response,
+  UseGuards,
+} from '@nestjs/common';
 import { CoreHttpResponse } from '@sv-connect/core-common';
 import {
   ACCESS_TOKEN_COOKIE_NAME,
   ACCOUNT_COOKIE_NAME,
   IAccount,
+  RegisterBody,
 } from '@sv-connect/core-domain';
 import config from 'config';
 import { Request, Response as IResponse } from 'express';
@@ -19,6 +27,27 @@ export class AuthenticationController {
 
   constructor(private readonly authenticationService: AuthenticationService) {
     this.accessTokenTTL = config.get<number>('jwt.ttl');
+  }
+
+  @Post('register')
+  async register(
+    @Body() body: RegisterBody,
+    @Response({ passthrough: true }) response: IResponse
+  ): Promise<CoreHttpResponse<IAccount>> {
+    const { account, accessToken } = await this.authenticationService.register(
+      body
+    );
+    response.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
+      maxAge: this.accessTokenTTL * 1000,
+      httpOnly: true,
+    });
+    response.cookie(ACCOUNT_COOKIE_NAME, account, {
+      maxAge: this.accessTokenTTL * 1000,
+    });
+    return CoreHttpResponse.success({
+      data: account,
+      message: 'Register successfully',
+    });
   }
 
   @UseGuards(LocalAuthGuard)

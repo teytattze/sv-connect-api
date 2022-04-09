@@ -21,12 +21,13 @@ export type {
   IUpdateAccountPayload,
 } from './accounts';
 
-export { ACCESS_TOKEN_COOKIE_NAME, LoginBody } from './auth';
+export { ACCESS_TOKEN_COOKIE_NAME, LoginBody, RegisterBody } from './auth';
 export type {
-  IAuthClient,
-  IAuthService,
+  IAuthenticationClient,
+  IAuthenticationService,
   IAuthToken,
   ILoginPayload,
+  IRegisterPayload,
 } from './auth';
 
 export {
