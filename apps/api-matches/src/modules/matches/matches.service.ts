@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { CoreRpcException, MatchesCode } from '@sv-connect/core-common';
 import {
   IMatch,
   IMatchesService,
@@ -8,6 +9,9 @@ import {
   IStudentWithProject,
   ISupervisor,
 } from '@sv-connect/core-domain';
+import { MunkresAlgorithm } from '../munkres/munkres.algorithm';
+import { MunkresHelper } from '../munkres/munkres.helper';
+import { Matrix } from '../munkres/munkres.types';
 import { ProjectsService } from '../projects/projects.service';
 import { StudentsService } from '../students/students.service';
 import { SupervisorsService } from '../supervisors/supervisors.service';
@@ -16,47 +20,36 @@ import { MatchesHelper } from './matches.helper';
 @Injectable()
 export class MatchesService implements IMatchesService {
   constructor(
+    private readonly munkresAlgorithm: MunkresAlgorithm,
     private readonly matchesHelper: MatchesHelper,
     private readonly projectsService: ProjectsService,
     private readonly studentsService: StudentsService,
     private readonly supervisorsService: SupervisorsService
   ) {}
 
-  async matchSingleStudent({
-    studentId,
-  }: IMatchSingleStudentPayload): Promise<IMatch> {
+  async matchSingleStudent({ studentId }: IMatchSingleStudentPayload) {
     const student = await this.getStudentWithProjectByStudentId(studentId);
     const { data: supervisors } = await this.supervisorsService.indexSupervisor(
       { fieldId: student.project.field.id, minCapacity: 1 }
     );
+    const weightages = this.matchesHelper.getProjectAndSupervisorsWeightages(
+      student.project,
+      supervisors
+    );
 
-    let highestPercentage = -1;
-    let highestSupervisorIndex = -1;
-    supervisors.forEach((supervisor, index) => {
-      const percentage =
-        this.matchesHelper.calculateProjectAndSupervisorSimilarity(
-          student.project,
-          supervisor
-        );
-      if (highestPercentage <= percentage) {
-        highestPercentage = percentage;
-        highestSupervisorIndex = index;
+    let curHighest = 0;
+    let curIndex = -1;
+    weightages.forEach((weightage, index) => {
+      if (weightage > curHighest) {
+        curHighest = weightage;
+        curIndex = index;
       }
     });
 
-    if (highestSupervisorIndex == -1) {
-      return {
-        student,
-        supervisor: null,
-        isMatched: false,
-        isApproved: false,
-      };
-    }
-
     return {
       student,
-      supervisor: supervisors[highestSupervisorIndex],
-      isMatched: true,
+      supervisor: curIndex >= 0 ? supervisors[curIndex] : null,
+      isMatched: curIndex >= 0,
       isApproved: false,
     };
   }
@@ -65,20 +58,69 @@ export class MatchesService implements IMatchesService {
     studentIds,
   }: IMatchSelectedStudentsPayload): Promise<IMatch[]> {
     const students = await this.getStudentWithProjectsByStudentIds(studentIds);
-    const studentsByField =
-      this.matchesHelper.makeStudentWithProjectsByFieldMap(students);
+    const studentsClusters =
+      this.matchesHelper.makeStudentsByFieldClusters(students);
 
-    const fieldIds = Object.keys(studentsByField);
+    let fieldIds = Array.from(studentsClusters.keys());
+
     const supervisors = await this.getSupervisorsByFieldIds(fieldIds);
-    const supervisorsByField =
-      this.matchesHelper.makeSupervisorsByFieldMap(supervisors);
+    if (!supervisors || supervisors.length === 0)
+      throw CoreRpcException.new(MatchesCode.SUPERVISOR_NOT_AVAILABLE);
 
-    const matchResult = this.matchStudentsAndSupervisors(
-      studentsByField,
-      supervisorsByField
-    );
+    const supervisorsClusters =
+      this.matchesHelper.makeSupervisorsByFieldCluters(supervisors);
 
-    return matchResult;
+    fieldIds = Array.from(supervisorsClusters.keys());
+
+    const weightagesClusters = new Map<string, Matrix>();
+    fieldIds.forEach((fieldId) => {
+      const students = studentsClusters.get(fieldId);
+      const supervisors = supervisorsClusters.get(fieldId);
+      const costMatrix: Matrix = students.map((student) =>
+        this.matchesHelper.getProjectAndSupervisorsWeightages(
+          student.project,
+          supervisors
+        )
+      );
+      const profitMatrix = MunkresHelper.convertProfitToCost(costMatrix);
+      weightagesClusters.set(fieldId, profitMatrix);
+    });
+
+    const resultsClusters = new Map<string, Matrix>();
+    fieldIds.forEach((fieldId) => {
+      const weightageMatrix = weightagesClusters.get(fieldId);
+      const matchingResults = this.munkresAlgorithm.solve(weightageMatrix);
+      resultsClusters.set(fieldId, matchingResults);
+    });
+
+    const results: IMatch[] = [];
+    const matchedStudentId = new Set<string>();
+    fieldIds.forEach((fieldId) => {
+      const matchingResults = resultsClusters.get(fieldId);
+      matchingResults.forEach((res) => {
+        const student = studentsClusters.get(fieldId)[res[0]];
+        const supervisor = supervisorsClusters.get(fieldId)[res[1]];
+        matchedStudentId.add(student.id);
+        results.push({
+          student: student || null,
+          supervisor: supervisor || null,
+          isMatched: true,
+          isApproved: false,
+        });
+      });
+    });
+
+    students.forEach((student) => {
+      if (!matchedStudentId.has(student.id)) {
+        results.push({
+          student,
+          supervisor: null,
+          isMatched: false,
+          isApproved: false,
+        });
+      }
+    });
+    return results;
   }
 
   async matchSelectedStudentsAndSupervisors({
@@ -88,81 +130,52 @@ export class MatchesService implements IMatchesService {
     const students = await this.getStudentWithProjectsByStudentIds(studentIds);
     const supervisors = await this.getSuperviorsBySupervisorIds(supervisorIds);
 
-    const studentsByField =
-      this.matchesHelper.makeStudentWithProjectsByFieldMap(students);
-    const supervisorsByField =
-      this.matchesHelper.makeSupervisorsByFieldMap(supervisors);
+    const expandedSupervisors = [];
+    supervisors.forEach((supervisor) => {
+      const capacity = supervisor.capacity;
+      for (let i = 0; i < capacity; i++) expandedSupervisors.push(supervisor);
+    });
 
-    const matchResult = this.matchStudentsAndSupervisors(
-      studentsByField,
-      supervisorsByField
+    const costMatrix: Matrix = students.map((student) =>
+      this.matchesHelper.getProjectAndSupervisorsWeightages(
+        student.project,
+        expandedSupervisors
+      )
     );
+    const profitMatrix = MunkresHelper.convertProfitToCost(costMatrix);
+    const matchingResults = this.munkresAlgorithm.solve(profitMatrix);
 
-    return matchResult;
-  }
-
-  private matchStudentsAndSupervisors(
-    studentsByField: Map<string, IStudentWithProject[]>,
-    supervisorsByField: Map<string, ISupervisor[]>
-  ): IMatch[] {
-    const fieldIds = Object.keys(studentsByField);
-
-    const matchResult: IMatch[] = [];
-    for (const fieldId of fieldIds) {
-      const supervisors = supervisorsByField[fieldId];
-      const students = studentsByField[fieldId];
-
-      students.forEach((student) => {
-        const project = student.project;
-
-        let highestPercentage = -1;
-        let highestSupervisorIndex = -1;
-        supervisors.forEach((supervisor, index) => {
-          if (supervisor.capacity > 0) {
-            const percentage =
-              this.matchesHelper.calculateProjectAndSupervisorSimilarity(
-                project,
-                supervisor
-              );
-            if (highestPercentage <= percentage) {
-              highestPercentage = percentage;
-              highestSupervisorIndex = index;
-            }
-          }
-        });
-
-        if (highestSupervisorIndex == -1) {
-          matchResult.push({
-            student: student,
-            supervisor: null,
-            isMatched: false,
-            isApproved: false,
-          });
-        } else {
-          supervisors[highestSupervisorIndex].capacity -= 1;
-          matchResult.push({
-            student: student,
-            supervisor: supervisors[highestSupervisorIndex],
-            isMatched: false,
-            isApproved: false,
-          });
-        }
+    const results: IMatch[] = [];
+    const matchedStudentId = new Set<string>();
+    matchingResults.forEach((res) => {
+      const student = students[res[0]];
+      const supervisor = expandedSupervisors[res[1]];
+      matchedStudentId.add(student.id);
+      results.push({
+        student: student || null,
+        supervisor: supervisor || null,
+        isMatched: true,
+        isApproved: false,
       });
-    }
+    });
 
-    return matchResult;
-  }
-
-  private async getStudentWithProjectsByStudentIds(studentIds: string[]) {
-    const promises = studentIds.map((id) =>
-      this.getStudentWithProjectByStudentId(id)
-    );
-    return await Promise.all(promises);
+    students.forEach((student) => {
+      if (!matchedStudentId.has(student.id)) {
+        results.push({
+          student,
+          supervisor: null,
+          isMatched: false,
+          isApproved: false,
+        });
+      }
+    });
+    return results;
   }
 
   private async getSupervisorsByFieldIds(
     fieldIds: string[]
   ): Promise<ISupervisor[]> {
+    console.log(fieldIds);
     const promises = fieldIds.map((id) =>
       this.supervisorsService.indexSupervisor({
         fieldId: id,
@@ -173,14 +186,11 @@ export class MatchesService implements IMatchesService {
     return supervisorsRes.map((res) => res.data).flat();
   }
 
-  private async getSuperviorsBySupervisorIds(
-    supervisorIds: string[]
-  ): Promise<ISupervisor[]> {
-    const promises = supervisorIds.map((id) =>
-      this.supervisorsService.getSupervisorById(id)
+  private async getStudentWithProjectsByStudentIds(studentIds: string[]) {
+    const promises = studentIds.map((id) =>
+      this.getStudentWithProjectByStudentId(id)
     );
-    const supervisorsRes = await Promise.all(promises);
-    return supervisorsRes.map((res) => res.data);
+    return await Promise.all(promises);
   }
 
   private async getStudentWithProjectByStudentId(
@@ -193,5 +203,15 @@ export class MatchesService implements IMatchesService {
       studentId
     );
     return { ...student, project };
+  }
+
+  private async getSuperviorsBySupervisorIds(
+    supervisorIds: string[]
+  ): Promise<ISupervisor[]> {
+    const promises = supervisorIds.map((id) =>
+      this.supervisorsService.getSupervisorById(id)
+    );
+    const supervisorsRes = await Promise.all(promises);
+    return supervisorsRes.map((res) => res.data);
   }
 }

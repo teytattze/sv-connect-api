@@ -10,3 +10,8 @@ export interface ICreateSupervisorPayload {
   field: IConnectFieldPayload;
   specializations: IConnectSpecializationPayload[];
 }
+
+export interface IRegisterSupervisorPayload {
+  capacity?: number;
+  account: IConnectAccountPayload;
+}

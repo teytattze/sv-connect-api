@@ -10,13 +10,14 @@ import { AccountsModule } from '../accounts/accounts.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import 'dotenv/config';
+import { ProfilesModule } from '../profiles/profiles.module';
 
 @Module({
   imports: [
     AccountsModule,
     JwtModule.register({
       signOptions: {
-        algorithm: 'ES512',
+        algorithm: config.get('jwt.alg'),
         expiresIn: config.get('jwt.ttl'),
         issuer: config.get('jwt.iss'),
       },
@@ -36,6 +37,7 @@ import 'dotenv/config';
       },
     }),
     PassportModule,
+    ProfilesModule,
   ],
   controllers: [AuthenticationController],
   providers: [AuthenticationService, LocalStrategy, JwtStrategy],

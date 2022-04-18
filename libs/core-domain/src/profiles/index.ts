@@ -6,6 +6,7 @@ export {
 export { ProfileDto } from './dtos/profile.dto';
 export {
   UpdateProfileBody,
+  UpdateProfileByIdParam,
   UpdateProfileByAccountIdParam,
 } from './dtos/update-profile.dto';
 

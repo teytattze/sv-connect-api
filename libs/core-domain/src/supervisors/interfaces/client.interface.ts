@@ -1,12 +1,15 @@
 import { ICoreServiceResponse } from '@sv-connect/core-common';
-import { ICreateSupervisorPayload } from '../payloads/create-supervisor.payload';
-import { IIndexSupervisorsByPayload } from '../payloads/index-supervisors.payload';
+import {
+  ICreateSupervisorPayload,
+  IRegisterSupervisorPayload,
+} from '../payloads/create-supervisor.payload';
+import { IIndexSupervisorsFilterPayload } from '../payloads/index-supervisors.payload';
 import { IUpdateSupervisorPayload } from '../payloads/update-supervisor.payload';
 import { ISupervisor } from './supervisor.interface';
 
 export interface ISupervisorsClient {
   indexSupervisors?(
-    by?: IIndexSupervisorsByPayload
+    by?: IIndexSupervisorsFilterPayload
   ): Promise<ICoreServiceResponse<ISupervisor[]>>;
   getSupervisorById?(id: string): Promise<ICoreServiceResponse<ISupervisor>>;
   getSupervisorByAccountId?(
@@ -14,6 +17,9 @@ export interface ISupervisorsClient {
   ): Promise<ICoreServiceResponse<ISupervisor>>;
   createSupervisor?(
     payload: ICreateSupervisorPayload
+  ): Promise<ICoreServiceResponse<ISupervisor>>;
+  registerSupervisor?(
+    payload: IRegisterSupervisorPayload
   ): Promise<ICoreServiceResponse<ISupervisor>>;
   updateSupervisorById?(
     id: string,

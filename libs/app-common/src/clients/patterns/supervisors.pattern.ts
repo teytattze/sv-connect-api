@@ -20,6 +20,11 @@ const CREATE_SUPERVISOR = {
   operationId: 'createSupervisor',
 };
 
+const REGISTER_SUPERVISOR = {
+  service: BASE_SERVICE,
+  operationId: 'registerSupervisor',
+};
+
 const UPDATE_SUPERVISOR_BY_ID = {
   service: BASE_SERVICE,
   operationId: 'updateSupervisorById',
@@ -40,6 +45,7 @@ export const SupervisorsPattern = {
   GET_SUPERVISOR_BY_ID,
   GET_SUPERVISOR_BY_ACCOUNT_ID,
   CREATE_SUPERVISOR,
+  REGISTER_SUPERVISOR,
   UPDATE_SUPERVISOR_BY_ID,
   UPDATE_SUPERVISOR_BY_ACCOUNT_ID,
   DELETE_SUPERVISOR_BY_ID,

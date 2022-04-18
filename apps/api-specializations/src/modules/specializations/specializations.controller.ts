@@ -8,6 +8,7 @@ import {
   ISpecialization,
   IUpdateSpecializationPayload,
 } from '@sv-connect/core-domain';
+import { IBulkDeleteSpecializationsByIdPayload } from 'libs/core-domain/src/specializations';
 import { SpecializationsService } from './specializations.service';
 
 @Controller()
@@ -51,6 +52,16 @@ export class SpecializationsController implements ISpecializationsClient {
     const specialization =
       await this.specializationsService.updateSpecializationById(id, payload);
     return CoreServiceResponse.success({ data: specialization });
+  }
+
+  @MessagePattern(SpecializationsPattern.BULK_DELETE_SPECIALIZATIONS_BY_ID)
+  async bulkDeleteSpecializationsById(
+    @Payload('data') payload: IBulkDeleteSpecializationsByIdPayload
+  ): Promise<CoreServiceResponse<null>> {
+    await this.specializationsService.bulkDeleteSpecializationsById(payload);
+    return CoreServiceResponse.success({
+      message: 'Specialization deleted successfully',
+    });
   }
 
   @MessagePattern(SpecializationsPattern.DELETE_SPECIALIZATION_BY_ID)

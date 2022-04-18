@@ -15,6 +15,7 @@ import {
   IUpdateSpecializationPayload,
 } from '@sv-connect/core-domain';
 import to from 'await-to-js';
+import { IBulkDeleteSpecializationsByIdPayload } from 'libs/core-domain/src/specializations';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -85,6 +86,26 @@ export class SpecializationsService implements ISpecializationsClient {
           id,
           data: payload,
         })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
+
+  async bulkDeleteSpecializationById(
+    payload: IBulkDeleteSpecializationsByIdPayload
+  ): Promise<ICoreServiceResponse<null>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<null>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(
+          SpecializationsPattern.BULK_DELETE_SPECIALIZATIONS_BY_ID,
+          {
+            data: payload,
+          }
+        )
       )
     );
     if (error) throw CoreHttpException.fromService(error);

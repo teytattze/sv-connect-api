@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AccountsCode, CoreRpcException } from '@sv-connect/core-common';
 import {
+  AccountRole,
   IAccount,
   IAccountsService,
   ICreateAccountPayload,
@@ -10,10 +11,16 @@ import bcrypt from 'bcryptjs';
 import { AccountsRepository } from './accounts.repository';
 import to from 'await-to-js';
 import { handlePrismaError } from './accounts.helper';
+import { StudentsService } from '../students/students.service';
+import { SupervisorsService } from '../supervisors/supervisors.service';
 
 @Injectable()
 export class AccountsService implements IAccountsService {
-  constructor(private readonly accountsRepository: AccountsRepository) {}
+  constructor(
+    private readonly accountsRepository: AccountsRepository,
+    private readonly studentsService: StudentsService,
+    private readonly supervisorsService: SupervisorsService
+  ) {}
 
   async indexAccounts(): Promise<IAccount[]> {
     const [error, accounts] = await to(this.accountsRepository.findAccounts());
@@ -47,8 +54,18 @@ export class AccountsService implements IAccountsService {
         password: hashedPassword,
       })
     );
-
     if (error) handlePrismaError(error);
+
+    if (newAccount.role === AccountRole.STUDENT)
+      await this.studentsService.createStudent({
+        account: { id: newAccount.id },
+      });
+
+    if (newAccount.role === AccountRole.SUPERVISOR)
+      await this.supervisorsService.registerSupervisor({
+        account: { id: newAccount.id },
+      });
+
     return newAccount;
   }
 

@@ -31,6 +31,7 @@ export type {
 } from './auth';
 
 export {
+  BulkDeleteFieldsByIdBody,
   CreateFieldBody,
   DeleteFieldByIdParam,
   FieldDto,
@@ -40,6 +41,7 @@ export {
   UpdateFieldByIdParam,
 } from './fields';
 export type {
+  IBulkDeleteFieldsByIdPayload,
   ICreateFieldPayload,
   IField,
   IFieldsClient,
@@ -49,14 +51,18 @@ export type {
 
 export {
   AcceptInvitationByIdParam,
+  BulkRejectInvitationsByIdBody,
   CreateInvitationBody,
+  IndexInvitationsQuery,
   InvitationDto,
   InvitationEntity,
   InvitationStatus,
   RejectInvitationByIdParam,
 } from './invitations';
 export type {
+  IBulkRejectInvitationsByIdPayload,
   ICreateInvitationPayload,
+  IIndexInvitationFilterPayload,
   IInvitation,
   IInvitationsClient,
   IInvitationsService,
@@ -85,6 +91,7 @@ export {
   ProfileDto,
   ProfileEntity,
   UpdateProfileBody,
+  UpdateProfileByIdParam,
   UpdateProfileByAccountIdParam,
 } from './profiles';
 export type {
@@ -135,6 +142,7 @@ export {
   DeleteStudentByIdParam,
   GetStudentByAccountIdParam,
   GetStudentByIdParam,
+  IndexStudentQuery,
   StudentDto,
   StudentEntity,
   UpdateStudentBody,
@@ -143,6 +151,7 @@ export {
 } from './students';
 export type {
   ICreateStudentPayload,
+  IIndexStudentFilterPayload,
   IStudent,
   IStudentsClient,
   IStudentsService,
@@ -156,6 +165,7 @@ export {
   GetSupervisorByAccountIdParam,
   GetSupervisorByIdParam,
   IndexSupervisorsQuery,
+  RegisterSupervisorBody,
   SupervisorDto,
   SupervisorEntity,
   UpdateSupervisorBody,
@@ -164,7 +174,8 @@ export {
 } from './supervisors';
 export type {
   ICreateSupervisorPayload,
-  IIndexSupervisorsByPayload,
+  IIndexSupervisorsFilterPayload,
+  IRegisterSupervisorPayload,
   ISupervisor,
   ISupervisorsClient,
   ISupervisorsService,

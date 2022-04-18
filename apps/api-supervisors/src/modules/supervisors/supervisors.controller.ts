@@ -4,7 +4,8 @@ import { SupervisorsPattern } from '@sv-connect/app-common';
 import { CoreServiceResponse } from '@sv-connect/core-common';
 import {
   ICreateSupervisorPayload,
-  IIndexSupervisorsByPayload,
+  IIndexSupervisorsFilterPayload,
+  IRegisterSupervisorPayload,
   ISupervisor,
   ISupervisorsClient,
   IUpdateSupervisorPayload,
@@ -17,7 +18,7 @@ export class SupervisorsController implements ISupervisorsClient {
 
   @MessagePattern(SupervisorsPattern.INDEX_SUPERVISORS)
   async indexSupervisors(
-    @Payload('by') by: IIndexSupervisorsByPayload
+    @Payload('by') by: IIndexSupervisorsFilterPayload
   ): Promise<CoreServiceResponse<ISupervisor[]>> {
     const supervisors = await this.supervisorsService.indexSupervisors(by);
     return CoreServiceResponse.success({ data: supervisors });
@@ -46,6 +47,16 @@ export class SupervisorsController implements ISupervisorsClient {
     @Payload('data') payload: ICreateSupervisorPayload
   ): Promise<CoreServiceResponse<ISupervisor>> {
     const supervisor = await this.supervisorsService.createSupervisor(payload);
+    return CoreServiceResponse.success({ data: supervisor });
+  }
+
+  @MessagePattern(SupervisorsPattern.REGISTER_SUPERVISOR)
+  async registerSupervisor(
+    @Payload('data') payload: IRegisterSupervisorPayload
+  ): Promise<CoreServiceResponse<ISupervisor>> {
+    const supervisor = await this.supervisorsService.registerSupervisor(
+      payload
+    );
     return CoreServiceResponse.success({ data: supervisor });
   }
 

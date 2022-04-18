@@ -12,6 +12,10 @@ export interface IProfilesClient {
     accountId: string
   ): Promise<ICoreServiceResponse<IProfile>>;
   updateProfileByAccountId?(
+    id: string,
+    payload: IUpdateProfilePayload
+  ): Promise<ICoreServiceResponse<IProfile>>;
+  updateProfileByAccountId?(
     accountId: string,
     payload: IUpdateProfilePayload
   ): Promise<ICoreServiceResponse<IProfile>>;

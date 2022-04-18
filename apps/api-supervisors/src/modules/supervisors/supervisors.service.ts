@@ -4,7 +4,8 @@ import { Prisma } from '@prisma/client';
 import { SupervisorsCode } from '@sv-connect/core-common';
 import {
   ICreateSupervisorPayload,
-  IIndexSupervisorsByPayload,
+  IIndexSupervisorsFilterPayload,
+  IRegisterSupervisorPayload,
   ISupervisor,
   ISupervisorsService,
   IUpdateSupervisorPayload,
@@ -18,9 +19,9 @@ export class SupervisorsService implements ISupervisorsService {
   constructor(private readonly supervisorsRepository: SupervisorsRepository) {}
 
   async indexSupervisors(
-    by?: IIndexSupervisorsByPayload
+    filter?: IIndexSupervisorsFilterPayload
   ): Promise<ISupervisor[]> {
-    const where = this.mapFilterToPrismaWhere(by);
+    const where = this.mapFilterToPrismaWhere(filter);
     const [error, supervisors] = await to<ISupervisor[], any>(
       this.supervisorsRepository.findSupervisors(where)
     );
@@ -58,6 +59,16 @@ export class SupervisorsService implements ISupervisorsService {
     return supervisor;
   }
 
+  async registerSupervisor(
+    payload: IRegisterSupervisorPayload
+  ): Promise<ISupervisor> {
+    const [error, supervisor] = await to<ISupervisor, any>(
+      this.supervisorsRepository.registerSupervisor(payload)
+    );
+    if (error) handlePrismaError(error);
+    return supervisor;
+  }
+
   async updateSupervisorById(
     id: string,
     payload: IUpdateSupervisorPayload
@@ -88,7 +99,7 @@ export class SupervisorsService implements ISupervisorsService {
   }
 
   private mapFilterToPrismaWhere(
-    by?: IIndexSupervisorsByPayload
+    filter?: IIndexSupervisorsFilterPayload
   ): Prisma.SupervisorWhereInput {
     const result: Prisma.SupervisorWhereInput = {
       capacity: {},
@@ -96,22 +107,22 @@ export class SupervisorsService implements ISupervisorsService {
       specializations: {},
     };
 
-    if (by?.maxCapacity) {
+    if (filter?.maxCapacity) {
       result.capacity = {
         ...(result.capacity as Prisma.IntFilter),
-        lte: by.maxCapacity,
+        lte: filter.maxCapacity,
       };
     }
-    if (by?.minCapacity) {
+    if (filter?.minCapacity) {
       result.capacity = {
         ...(result.capacity as Prisma.IntFilter),
-        gte: by.minCapacity,
+        gte: filter.minCapacity,
       };
     }
-    if (by?.fieldId) {
+    if (filter?.fieldId) {
       result.fieldId = {
         ...(result.fieldId as Prisma.StringFilter),
-        equals: by.fieldId,
+        equals: filter.fieldId,
       };
     }
     return result;

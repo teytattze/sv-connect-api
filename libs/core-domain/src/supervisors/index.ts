@@ -1,4 +1,7 @@
-export { CreateSupervisorBody } from './dtos/create-supervisor.dto';
+export {
+  CreateSupervisorBody,
+  RegisterSupervisorBody,
+} from './dtos/create-supervisor.dto';
 export { DeleteSupervisorByIdParam } from './dtos/delete-supervisor.dto';
 export {
   GetSupervisorByAccountIdParam,
@@ -18,6 +21,9 @@ export type { ISupervisorsClient } from './interfaces/client.interface';
 export type { ISupervisorsService } from './interfaces/service.interface';
 export type { ISupervisor } from './interfaces/supervisor.interface';
 
-export type { ICreateSupervisorPayload } from './payloads/create-supervisor.payload';
-export type { IIndexSupervisorsByPayload } from './payloads/index-supervisors.payload';
+export type {
+  ICreateSupervisorPayload,
+  IRegisterSupervisorPayload,
+} from './payloads/create-supervisor.payload';
+export type { IIndexSupervisorsFilterPayload } from './payloads/index-supervisors.payload';
 export type { IUpdateSupervisorPayload } from './payloads/update-supervisor.payload';

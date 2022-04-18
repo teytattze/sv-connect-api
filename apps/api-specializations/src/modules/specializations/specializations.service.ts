@@ -8,6 +8,7 @@ import {
   IUpdateSpecializationPayload,
 } from '@sv-connect/core-domain';
 import to from 'await-to-js';
+import { IBulkDeleteSpecializationsByIdPayload } from 'libs/core-domain/src/specializations';
 import { handlePrismaError } from './specializations.helper';
 import { SpecializationsRepository } from './specializations.repository';
 
@@ -58,6 +59,14 @@ export class SpecializationsService implements ISpecializationsService {
     );
     if (error) handlePrismaError(error);
     return specialization;
+  }
+
+  async bulkDeleteSpecializationsById(
+    payload: IBulkDeleteSpecializationsByIdPayload
+  ): Promise<void> {
+    const { ids } = payload;
+    const promises = ids.map((id) => this.deleteSpecializationById(id));
+    await Promise.all(promises);
   }
 
   async deleteSpecializationById(id: string): Promise<void> {

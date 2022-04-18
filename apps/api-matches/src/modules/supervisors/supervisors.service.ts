@@ -6,7 +6,7 @@ import {
   ICoreServiceResponse,
 } from '@sv-connect/core-common';
 import {
-  IIndexSupervisorsByPayload,
+  IIndexSupervisorsFilterPayload,
   ISupervisor,
   ISupervisorsClient,
 } from '@sv-connect/core-domain';
@@ -20,7 +20,7 @@ export class SupervisorsService implements ISupervisorsClient {
   ) {}
 
   async indexSupervisor(
-    by: IIndexSupervisorsByPayload
+    by: IIndexSupervisorsFilterPayload
   ): Promise<ICoreServiceResponse<ISupervisor[]>> {
     const [error, response] = await to<
       ICoreServiceResponse<ISupervisor[]>,

@@ -39,5 +39,15 @@
         },
       },
     },
+    students: {
+      transport: 5,
+      options: {
+        urls: ['amqp://localhost:5672'],
+        queue: 'service_students_queue',
+        queueOptions: {
+          durable: false,
+        },
+      },
+    },
   },
 }

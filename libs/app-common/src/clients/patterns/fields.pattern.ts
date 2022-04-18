@@ -20,6 +20,11 @@ const UPDATE_FIELD_BY_ID = {
   operationId: 'updatedFieldById',
 };
 
+const BULK_DELETE_FIELD_BY_ID = {
+  service: BASE_SERVICE,
+  operationId: 'bulkDeleteFieldById',
+};
+
 const DELETE_FIELD_BY_ID = {
   service: BASE_SERVICE,
   operationId: 'deleteFieldById',
@@ -30,5 +35,6 @@ export const FieldsPattern = {
   GET_FIELD_BY_ID,
   CREATE_FIELD,
   UPDATE_FIELD_BY_ID,
+  BULK_DELETE_FIELD_BY_ID,
   DELETE_FIELD_BY_ID,
 };

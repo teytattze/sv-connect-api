@@ -41,6 +41,17 @@ export class ProfilesService implements IProfilesService {
     return profile;
   }
 
+  async updateProfileById(
+    id: string,
+    payload: IUpdateProfilePayload
+  ): Promise<IProfile> {
+    const [error, profile] = await to<IProfile, any>(
+      this.profilesRepository.updateProfile({ id }, payload)
+    );
+    if (error) handlePrismaError(error);
+    return profile;
+  }
+
   async updateProfileByAccountId(
     accountId: string,
     payload: IUpdateProfilePayload

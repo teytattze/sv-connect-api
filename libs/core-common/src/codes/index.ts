@@ -4,6 +4,7 @@ export { AccountsCode } from './accounts.code';
 export { AuthCode } from './auth.code';
 export { FieldsCode } from './fields.code';
 export { InvitationsCode } from './invitations.code';
+export { MatchesCode } from './matches.code';
 export { ProfilesCode } from './profiles.code';
 export { ProjectsCode } from './projects.code';
 export { SpecializationsCode } from './specializations.code';

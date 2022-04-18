@@ -4,3 +4,7 @@ export interface IUpdateInvitationPayload {
   message?: string;
   status?: InvitationStatus;
 }
+
+export interface IBulkRejectInvitationsByIdPayload {
+  ids: string[];
+}

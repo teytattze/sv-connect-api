@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsUUID } from 'class-validator';
+import { IsArray, IsUUID } from 'class-validator';
+
+export class BulkDeleteFieldsByIdBody {
+  @IsArray()
+  @ApiProperty({ isArray: true })
+  ids: string[];
+}
 
 export class DeleteFieldByIdParam {
   @IsUUID()

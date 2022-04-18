@@ -38,6 +38,15 @@ export class ProfilesController implements IProfilesClient {
     return CoreServiceResponse.success({ data: profile });
   }
 
+  @MessagePattern(ProfilesPattern.UPDATE_PROFILE_BY_ID)
+  async updateProfileById(
+    @Payload('id') id: string,
+    @Payload('data') payload: IUpdateProfilePayload
+  ): Promise<CoreServiceResponse<IProfile>> {
+    const profile = await this.profilesService.updateProfileById(id, payload);
+    return CoreServiceResponse.success({ data: profile });
+  }
+
   @MessagePattern(ProfilesPattern.UPDATE_PROFILE_BY_ACCOUNT_ID)
   async updateProfileByAccountId(
     @Payload('accountId') accountId: string,

@@ -6,6 +6,10 @@ export interface IProfilesService {
   createProfile(payload: ICreateProfilePayload): Promise<IProfile>;
   getProfileById(id: string): Promise<IProfile>;
   getProfileByAccountId(accountId: string): Promise<IProfile>;
+  updateProfileById(
+    id: string,
+    payload: IUpdateProfilePayload
+  ): Promise<IProfile>;
   updateProfileByAccountId(
     accountId: string,
     payload: IUpdateProfilePayload

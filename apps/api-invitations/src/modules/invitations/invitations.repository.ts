@@ -23,6 +23,15 @@ export class InvitationsRepository {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  async findInvitations(
+    by?: Prisma.InvitationWhereInput
+  ): Promise<IInvitation[]> {
+    return (await this.prisma.invitation.findMany({
+      where: by,
+      select: this.defaultSelect,
+    })) as IInvitation[];
+  }
+
   async createInvitation(
     payload: ICreateInvitationPayload
   ): Promise<IInvitation> {

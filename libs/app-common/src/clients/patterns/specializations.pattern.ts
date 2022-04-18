@@ -20,6 +20,11 @@ const UPDATE_SPECIALIZATION_BY_ID = {
   operationId: 'updateSpecializationById',
 };
 
+const BULK_DELETE_SPECIALIZATIONS_BY_ID = {
+  service: BASE_SERVICE,
+  operationId: 'bulkDeleteSpecializationsById',
+};
+
 const DELETE_SPECIALIZATION_BY_ID = {
   service: BASE_SERVICE,
   operationId: 'deleteSpecializationById',
@@ -30,5 +35,6 @@ export const SpecializationsPattern = {
   GET_SPECIALIZATION_BY_ID,
   CREATE_SPECIALIZATION,
   UPDATE_SPECIALIZATION_BY_ID,
+  BULK_DELETE_SPECIALIZATIONS_BY_ID,
   DELETE_SPECIALIZATION_BY_ID,
 };

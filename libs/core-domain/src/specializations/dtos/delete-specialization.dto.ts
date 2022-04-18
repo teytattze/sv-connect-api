@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsUUID } from 'class-validator';
+import { IsArray, IsUUID } from 'class-validator';
+
+export class BulkDeleteSpecializationsByIdBody {
+  @IsArray()
+  @ApiProperty()
+  ids: string[];
+}
 
 export class DeleteSpecializationByIdParam {
   @IsUUID()

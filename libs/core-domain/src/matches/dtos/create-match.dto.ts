@@ -15,8 +15,7 @@ export class MatchSingleStudentBody implements IMatchSingleStudentPayload {
 export class MatchSelectedStudentsBody
   implements IMatchSelectedStudentsPayload
 {
-  @IsArray()
-  @IsUUID()
+  @IsUUID('4', { each: true })
   @ApiProperty()
   studentIds: string[];
 }
@@ -24,13 +23,11 @@ export class MatchSelectedStudentsBody
 export class MatchSelectedStudentsAndSupervisorsBody
   implements IMatchSelectedStudentsAndSupervisorsPayload
 {
-  @IsArray()
-  @IsUUID()
+  @IsUUID('4', { each: true })
   @ApiProperty()
   studentIds: string[];
 
-  @IsArray()
-  @IsUUID()
+  @IsUUID('4', { each: true })
   @ApiProperty()
   supervisorIds: string[];
 }

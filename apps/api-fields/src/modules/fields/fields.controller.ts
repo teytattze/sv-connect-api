@@ -7,6 +7,7 @@ import {
   ICreateFieldPayload,
   IField,
   IUpdateFieldPayload,
+  IBulkDeleteFieldsByIdPayload,
 } from '@sv-connect/core-domain';
 import { FieldsService } from './fields.service';
 
@@ -43,6 +44,16 @@ export class FieldsController implements IFieldsClient {
   ): Promise<CoreServiceResponse<IField>> {
     const field = await this.fieldsService.updateFieldById(id, payload);
     return CoreServiceResponse.success({ data: field });
+  }
+
+  @MessagePattern(FieldsPattern.BULK_DELETE_FIELD_BY_ID)
+  async bulkDeleteFieldById(
+    @Payload('data') payload: IBulkDeleteFieldsByIdPayload
+  ): Promise<CoreServiceResponse<null>> {
+    await this.fieldsService.bulkDeleteFieldsById(payload);
+    return CoreServiceResponse.success({
+      message: 'Fields deleted successfully',
+    });
   }
 
   @MessagePattern(FieldsPattern.DELETE_FIELD_BY_ID)

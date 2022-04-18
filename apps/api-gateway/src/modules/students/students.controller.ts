@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CoreHttpResponse } from '@sv-connect/core-common';
 import {
   CreateStudentBody,
   GetStudentByAccountIdParam,
+  IndexStudentQuery,
   StudentDto,
 } from '@sv-connect/core-domain';
 import { StudentsService } from './students.service';
@@ -12,6 +13,14 @@ import { StudentsService } from './students.service';
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
+
+  @Get()
+  async indexStudents(
+    @Query() query: IndexStudentQuery
+  ): Promise<CoreHttpResponse<StudentDto[]>> {
+    const { data } = await this.studentsService.indexStudents(query);
+    return CoreHttpResponse.success({ data });
+  }
 
   @Post('create')
   async createStudent(

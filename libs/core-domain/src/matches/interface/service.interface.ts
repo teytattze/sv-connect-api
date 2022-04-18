@@ -8,9 +8,9 @@ import { IMatch } from './match.interface';
 export interface IMatchesService {
   matchSingleStudent(payload: IMatchSingleStudentPayload): Promise<IMatch>;
   matchSelectedStudents(
-    payload: IMatchSelectedStudentsPayload,
+    payload: IMatchSelectedStudentsPayload
   ): Promise<IMatch[]>;
   matchSelectedStudentsAndSupervisors(
-    payload: IMatchSelectedStudentsAndSupervisorsPayload,
+    payload: IMatchSelectedStudentsAndSupervisorsPayload
   ): Promise<IMatch[]>;
 }

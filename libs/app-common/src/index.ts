@@ -15,15 +15,15 @@ export {
   PROJECTS_CLIENT,
   ProfilesPattern,
   ProjectsPattern,
-  SESSIONS_CLIENT,
   SPECIALIZATIONS_CLIENT,
   STUDENTS_CLIENT,
   SUPERVISORS_CLIENT,
-  SessionsPattern,
   SpecializationsPattern,
   StudentsPattern,
   SupervisorsPattern,
 } from './clients';
+
+export { ToBoolean } from './decorators';
 
 export { HttpExceptionFilter, RpcExceptionFilter } from './filters';
 

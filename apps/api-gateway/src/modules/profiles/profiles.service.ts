@@ -63,6 +63,25 @@ export class ProfilesService implements IProfilesClient {
     return response;
   }
 
+  async updateProfileById(
+    id: string,
+    payload: IUpdateProfilePayload
+  ): Promise<ICoreServiceResponse<IProfile>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<IProfile>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(ProfilesPattern.UPDATE_PROFILE_BY_ID, {
+          id,
+          data: payload,
+        })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
+
   async updateProfileByAccountId(
     accountId: string,
     payload: IUpdateProfilePayload

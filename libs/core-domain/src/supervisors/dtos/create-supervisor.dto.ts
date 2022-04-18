@@ -12,7 +12,10 @@ import {
   IsOptional,
   ValidateNested,
 } from 'class-validator';
-import { ICreateSupervisorPayload } from '../payloads/create-supervisor.payload';
+import {
+  ICreateSupervisorPayload,
+  IRegisterSupervisorPayload,
+} from '../payloads/create-supervisor.payload';
 
 export class CreateSupervisorBody implements ICreateSupervisorPayload {
   @IsOptional()
@@ -38,4 +41,17 @@ export class CreateSupervisorBody implements ICreateSupervisorPayload {
   @Type(() => ConnectSpecializationBody)
   @ApiProperty({ isArray: true, type: ConnectSpecializationBody })
   specializations: ConnectSpecializationBody[];
+}
+
+export class RegisterSupervisorBody implements IRegisterSupervisorPayload {
+  @IsOptional()
+  @IsInt()
+  @ApiPropertyOptional()
+  capacity?: number;
+
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => ConnectAccountBody)
+  @ApiProperty({ type: ConnectAccountBody })
+  account: ConnectAccountBody;
 }

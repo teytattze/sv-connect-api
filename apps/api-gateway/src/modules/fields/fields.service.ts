@@ -10,6 +10,7 @@ import {
   ICreateFieldPayload,
   IUpdateFieldPayload,
   IFieldsClient,
+  IBulkDeleteFieldsByIdPayload,
 } from '@sv-connect/core-domain';
 import to from 'await-to-js';
 import { firstValueFrom } from 'rxjs';
@@ -68,6 +69,23 @@ export class FieldsService implements IFieldsClient {
       firstValueFrom(
         this.fieldsClient.send(FieldsPattern.UPDATE_FIELD_BY_ID, {
           id,
+          data: payload,
+        })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
+
+  async bulkDeleteFieldsById(
+    payload: IBulkDeleteFieldsByIdPayload
+  ): Promise<ICoreServiceResponse<null>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<null>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.fieldsClient.send(FieldsPattern.BULK_DELETE_FIELD_BY_ID, {
           data: payload,
         })
       )

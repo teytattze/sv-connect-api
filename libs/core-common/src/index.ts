@@ -3,6 +3,7 @@ export {
   AuthCode,
   FieldsCode,
   InvitationsCode,
+  MatchesCode,
   ProfilesCode,
   ProjectsCode,
   GeneralCode,
@@ -74,4 +75,4 @@ export type {
   ICoreServiceResponsePayload,
 } from './responses';
 
-export type { Nullable, Optional } from './types';
+export type { Nullable, Tuple, Optional } from './types';

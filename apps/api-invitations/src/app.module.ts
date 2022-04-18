@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import {
+  ACCOUNTS_CLIENT,
   ClientsProvider,
   IClientsProviderOptions,
-  INVITATIONS_CLIENT,
   PrismaModule,
+  STUDENTS_CLIENT,
 } from '@sv-connect/app-common';
 import config from 'config';
 import { InvitationsModule } from './modules/invitations/invitations.module';
@@ -11,8 +12,12 @@ import 'dotenv/config';
 
 const clientsProviderOptions: IClientsProviderOptions[] = [
   {
-    provide: INVITATIONS_CLIENT,
+    provide: ACCOUNTS_CLIENT,
     transport: config.get('microservices.accounts'),
+  },
+  {
+    provide: STUDENTS_CLIENT,
+    transport: config.get('microservices.students'),
   },
 ];
 

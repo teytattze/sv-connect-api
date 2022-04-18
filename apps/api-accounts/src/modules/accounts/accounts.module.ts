@@ -5,8 +5,11 @@ import { AccountsRepository } from './accounts.repository';
 import { AccountsAdminController } from './admin/accounts.admin.controller';
 import { AdminAccountsService } from './admin/accounts.admin.service';
 import { AdminAccountsRepository } from './admin/accounts.admin.repository';
+import { StudentsModule } from '../students/students.module';
+import { SupervisorsModule } from '../supervisors/supervisors.module';
 
 @Module({
+  imports: [StudentsModule, SupervisorsModule],
   controllers: [AccountsAdminController, AccountsController],
   providers: [
     AdminAccountsService,

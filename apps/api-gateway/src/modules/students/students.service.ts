@@ -7,6 +7,7 @@ import {
 } from '@sv-connect/core-common';
 import {
   ICreateStudentPayload,
+  IIndexStudentFilterPayload,
   IStudent,
   IStudentsClient,
 } from '@sv-connect/core-domain';
@@ -17,6 +18,17 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class StudentsService implements IStudentsClient {
   constructor(@Inject(STUDENTS_CLIENT) private readonly client: ClientProxy) {}
+
+  async indexStudents(
+    by?: IIndexStudentFilterPayload
+  ): Promise<ICoreServiceResponse<IStudent[]>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<IStudent[]>,
+      ICoreServiceResponse<null>
+    >(firstValueFrom(this.client.send(StudentsPattern.INDEX_STUDENTS, { by })));
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
 
   async createStudent(
     payload: ICreateStudentPayload

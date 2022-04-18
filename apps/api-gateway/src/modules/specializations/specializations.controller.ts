@@ -17,6 +17,7 @@ import {
   UpdateSpecializationBody,
   UpdateSpecializationByIdParam,
 } from '@sv-connect/core-domain';
+import { BulkDeleteSpecializationsByIdBody } from 'libs/core-domain/src/specializations';
 import { SpecializationsService } from './specializations.service';
 
 @ApiTags('Specializations')
@@ -76,15 +77,22 @@ export class SpecializationsController {
     });
   }
 
+  @Post('bulk/delete')
+  async bulkDeleteSpecializationById(
+    @Body() body: BulkDeleteSpecializationsByIdBody
+  ): Promise<CoreHttpResponse<null>> {
+    await this.specializationsService.bulkDeleteSpecializationById(body);
+    return CoreHttpResponse.success({
+      message: 'Specializations deleted successfully',
+    });
+  }
+
   @Delete('delete/:id')
   async deleteSpecializationById(
     @Param() { id }: DeleteSpecializationByIdParam
   ): Promise<CoreHttpResponse<null>> {
-    const { data } = await this.specializationsService.deleteSpecializationById(
-      id
-    );
+    await this.specializationsService.deleteSpecializationById(id);
     return CoreHttpResponse.success({
-      data,
       message: 'Specialization deleted successfully',
     });
   }

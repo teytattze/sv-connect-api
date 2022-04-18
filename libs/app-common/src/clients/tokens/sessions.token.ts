@@ -1,1 +1,0 @@
-export const SESSIONS_CLIENT = 'SESSIONS_CLIENT';

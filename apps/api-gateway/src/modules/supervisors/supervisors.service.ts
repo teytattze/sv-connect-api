@@ -7,9 +7,10 @@ import {
 } from '@sv-connect/core-common';
 import {
   ICreateSupervisorPayload,
-  IIndexSupervisorsByPayload,
+  IIndexSupervisorsFilterPayload,
   ISupervisor,
   ISupervisorsClient,
+  IUpdateSupervisorPayload,
 } from '@sv-connect/core-domain';
 import to from 'await-to-js';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +22,7 @@ export class SupervisorsService implements ISupervisorsClient {
   ) {}
 
   async indexSupervisors(
-    by: IIndexSupervisorsByPayload
+    by: IIndexSupervisorsFilterPayload
   ): Promise<ICoreServiceResponse<ISupervisor[]>> {
     const [error, response] = await to<
       ICoreServiceResponse<ISupervisor[]>,
@@ -29,6 +30,23 @@ export class SupervisorsService implements ISupervisorsClient {
     >(
       firstValueFrom(
         this.client.send(SupervisorsPattern.INDEX_SUPERVISORS, { by })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
+
+  async getSupervisorByAccountId(
+    accountId: string
+  ): Promise<ICoreServiceResponse<ISupervisor>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<ISupervisor>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(SupervisorsPattern.GET_SUPERVISOR_BY_ACCOUNT_ID, {
+          accountId,
+        })
       )
     );
     if (error) throw CoreHttpException.fromService(error);
@@ -44,6 +62,25 @@ export class SupervisorsService implements ISupervisorsClient {
     >(
       firstValueFrom(
         this.client.send(SupervisorsPattern.CREATE_SUPERVISOR, {
+          data: payload,
+        })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
+
+  async updateSupervisorById(
+    id: string,
+    payload: IUpdateSupervisorPayload
+  ): Promise<ICoreServiceResponse<ISupervisor>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<ISupervisor>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(SupervisorsPattern.UPDATE_SUPERVISOR_BY_ID, {
+          id,
           data: payload,
         })
       )

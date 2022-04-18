@@ -35,6 +35,12 @@ export class UpdateProfileBody implements IUpdateProfilePayload {
   backgroundUrl?: Nullable<string>;
 }
 
+export class UpdateProfileByIdParam {
+  @IsUUID()
+  @ApiProperty()
+  id: string;
+}
+
 export class UpdateProfileByAccountIdParam {
   @IsUUID()
   @ApiProperty()

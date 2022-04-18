@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { FieldsCode } from '@sv-connect/core-common';
 import {
+  IBulkDeleteFieldsByIdPayload,
   ICreateFieldPayload,
   IField,
   IFieldsService,
@@ -52,6 +53,14 @@ export class FieldsService implements IFieldsService {
     );
     if (error) handlePrismaError(error);
     return fields;
+  }
+
+  async bulkDeleteFieldsById(
+    payload: IBulkDeleteFieldsByIdPayload
+  ): Promise<void> {
+    const { ids } = payload;
+    const promises = ids.map((id) => this.deleteFieldById(id));
+    await Promise.all(promises);
   }
 
   async deleteFieldById(id: string): Promise<void> {

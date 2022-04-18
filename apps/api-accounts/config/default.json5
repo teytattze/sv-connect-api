@@ -29,11 +29,21 @@
     url: 'mysql://root:password@localhost:3306/sv_connect_app?charset=utf8mb4&parseTime=True&loc=Local',
   },
   microservices: {
-    sessions: {
+    supervisors: {
       transport: 5,
       options: {
         urls: ['amqp://localhost:5672'],
-        queue: 'service_sessions_queue',
+        queue: 'service_supervisors_queue',
+        queueOptions: {
+          durable: false,
+        },
+      },
+    },
+    students: {
+      transport: 5,
+      options: {
+        urls: ['amqp://localhost:5672'],
+        queue: 'service_students_queue',
         queueOptions: {
           durable: false,
         },

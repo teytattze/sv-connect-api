@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MunkresModule } from '../munkres/munkres.module';
 import { ProjectsModule } from '../projects/projects.module';
 import { StudentsModule } from '../students/students.module';
 import { SupervisorsModule } from '../supervisors/supervisors.module';
@@ -7,7 +8,7 @@ import { MatchesHelper } from './matches.helper';
 import { MatchesService } from './matches.service';
 
 @Module({
-  imports: [ProjectsModule, StudentsModule, SupervisorsModule],
+  imports: [MunkresModule, ProjectsModule, StudentsModule, SupervisorsModule],
   controllers: [MatchesController],
   providers: [MatchesHelper, MatchesService],
 })

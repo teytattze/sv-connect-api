@@ -6,7 +6,9 @@ import {
   ICoreServiceResponse,
 } from '@sv-connect/core-common';
 import {
+  IBulkRejectInvitationsByIdPayload,
   ICreateInvitationPayload,
+  IIndexInvitationFilterPayload,
   IInvitation,
   IInvitationsClient,
 } from '@sv-connect/core-domain';
@@ -18,6 +20,21 @@ export class InvitationsService implements IInvitationsClient {
   constructor(
     @Inject(INVITATIONS_CLIENT) private readonly client: ClientProxy
   ) {}
+
+  async indexInvitations(
+    by?: IIndexInvitationFilterPayload
+  ): Promise<ICoreServiceResponse<IInvitation[]>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<IInvitation[]>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(InvitationsPattern.INDEX_INVITATIONS, { by })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
 
   async createInvitation(
     payload: ICreateInvitationPayload
@@ -49,6 +66,23 @@ export class InvitationsService implements IInvitationsClient {
     );
     if (error) throw CoreHttpException.fromService(error);
     return invitation;
+  }
+
+  async bulkRejectInvitationsById(
+    payload: IBulkRejectInvitationsByIdPayload
+  ): Promise<ICoreServiceResponse<IInvitation[]>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<IInvitation[]>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(InvitationsPattern.BULK_REJECT_INVITATIONS_BY_ID, {
+          data: payload,
+        })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
   }
 
   async rejectInvitationById(

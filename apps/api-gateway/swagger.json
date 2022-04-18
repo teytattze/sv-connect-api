@@ -311,6 +311,30 @@
         ]
       }
     },
+    "/api/fields/bulk/delete": {
+      "post": {
+        "operationId": "bulkDeleteFieldById",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteFieldsByIdBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Fields"
+        ]
+      }
+    },
     "/api/fields/delete/{id}": {
       "delete": {
         "operationId": "deleteFieldById",
@@ -331,6 +355,20 @@
         },
         "tags": [
           "Fields"
+        ]
+      }
+    },
+    "/api/invitations": {
+      "get": {
+        "operationId": "indexInvitations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Invitations"
         ]
       }
     },
@@ -360,7 +398,7 @@
     },
     "/api/invitations/accept/{id}": {
       "put": {
-        "operationId": "acceptInvitation",
+        "operationId": "acceptInvitationById",
         "parameters": [
           {
             "name": "id",
@@ -381,9 +419,33 @@
         ]
       }
     },
+    "/api/invitations/bulk/reject": {
+      "put": {
+        "operationId": "bulkRejectInvitationsById",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkRejectInvitationsByIdBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Invitations"
+        ]
+      }
+    },
     "/api/invitations/reject/{id}": {
       "put": {
-        "operationId": "rejectInvitation",
+        "operationId": "rejectInvitationById",
         "parameters": [
           {
             "name": "id",
@@ -554,6 +616,39 @@
         ]
       }
     },
+    "/api/profiles/update/{id}": {
+      "put": {
+        "operationId": "updateProfileById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Profiles"
+        ]
+      }
+    },
     "/api/profiles/update/accounts/{accountId}": {
       "put": {
         "operationId": "updateProfileByAccountId",
@@ -683,7 +778,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateProjectBodyNew"
+                "$ref": "#/components/schemas/UpdateProjectBody"
               }
             }
           }
@@ -792,6 +887,30 @@
         ]
       }
     },
+    "/api/specializations/bulk/delete": {
+      "post": {
+        "operationId": "bulkDeleteSpecializationById",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteSpecializationsByIdBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Specializations"
+        ]
+      }
+    },
     "/api/specializations/delete/{id}": {
       "delete": {
         "operationId": "deleteSpecializationById",
@@ -812,6 +931,37 @@
         },
         "tags": [
           "Specializations"
+        ]
+      }
+    },
+    "/api/students": {
+      "get": {
+        "operationId": "indexStudents",
+        "parameters": [
+          {
+            "name": "hasSupervisor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "supervisorId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Students"
         ]
       }
     },
@@ -917,6 +1067,62 @@
         },
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supervisors"
+        ]
+      }
+    },
+    "/api/supervisors/accounts/{accountId}": {
+      "get": {
+        "operationId": "getSupervisorByAccountId",
+        "parameters": [
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supervisors"
+        ]
+      }
+    },
+    "/api/supervisors/update/{id}": {
+      "put": {
+        "operationId": "updateSupervisor",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSupervisorBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
             "description": ""
           }
         },
@@ -1040,34 +1246,6 @@
           "title"
         ]
       },
-      "DisconnectSpecializationBody": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateManySpecializationsRelationBody": {
-        "type": "object",
-        "properties": {
-          "connect": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ConnectSpecializationBody"
-            }
-          },
-          "disconnect": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DisconnectSpecializationBody"
-            }
-          }
-        }
-      },
       "UpdateFieldBody": {
         "type": "object",
         "properties": {
@@ -1075,9 +1253,26 @@
             "type": "string"
           },
           "specializations": {
-            "$ref": "#/components/schemas/UpdateManySpecializationsRelationBody"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectSpecializationBody"
+            }
           }
         }
+      },
+      "BulkDeleteFieldsByIdBody": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "ids"
+        ]
       },
       "ConnectStudentBody": {
         "type": "object",
@@ -1125,6 +1320,20 @@
         "required": [
           "student",
           "supervisor"
+        ]
+      },
+      "BulkRejectInvitationsByIdBody": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ids"
         ]
       },
       "MatchSingleStudentBody": {
@@ -1328,7 +1537,7 @@
           "student"
         ]
       },
-      "UpdateProjectBodyNew": {
+      "UpdateProjectBody": {
         "type": "object",
         "properties": {
           "title": {
@@ -1365,34 +1574,6 @@
           "title"
         ]
       },
-      "DisconnectFieldBody": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateManyFieldsRelationBody": {
-        "type": "object",
-        "properties": {
-          "connect": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ConnectFieldBody"
-            }
-          },
-          "disconnect": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DisconnectFieldBody"
-            }
-          }
-        }
-      },
       "UpdateSpecializationBody": {
         "type": "object",
         "properties": {
@@ -1400,9 +1581,26 @@
             "type": "string"
           },
           "fields": {
-            "$ref": "#/components/schemas/UpdateManyFieldsRelationBody"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectFieldBody"
+            }
           }
         }
+      },
+      "BulkDeleteSpecializationsByIdBody": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ids"
+        ]
       },
       "CreateStudentBody": {
         "type": "object",
@@ -1442,6 +1640,23 @@
           "field",
           "specializations"
         ]
+      },
+      "UpdateSupervisorBody": {
+        "type": "object",
+        "properties": {
+          "capacity": {
+            "type": "number"
+          },
+          "field": {
+            "$ref": "#/components/schemas/ConnectFieldBody"
+          },
+          "specializations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectSpecializationBody"
+            }
+          }
+        }
       }
     }
   }

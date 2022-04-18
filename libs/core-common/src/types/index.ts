@@ -1,1 +1,1 @@
-export type { Nullable, Optional } from './common.type';
+export type { Nullable, Tuple, Optional } from './common.type';

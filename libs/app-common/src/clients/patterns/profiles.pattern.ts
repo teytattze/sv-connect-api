@@ -15,6 +15,11 @@ const CREATE_PROFILE = {
   operationId: 'createProfile',
 };
 
+const UPDATE_PROFILE_BY_ID = {
+  service: BASE_SERVICE,
+  operationId: 'updateProfileById',
+};
+
 const UPDATE_PROFILE_BY_ACCOUNT_ID = {
   service: BASE_SERVICE,
   operationId: 'updateProfileByAccountId',
@@ -24,5 +29,6 @@ export const ProfilesPattern = {
   GET_PROFILE_BY_ID,
   GET_PROFILE_BY_ACCOUNT_ID,
   CREATE_PROFILE,
+  UPDATE_PROFILE_BY_ID,
   UPDATE_PROFILE_BY_ACCOUNT_ID,
 };

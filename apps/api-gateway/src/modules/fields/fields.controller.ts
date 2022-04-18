@@ -10,6 +10,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { CoreHttpResponse } from '@sv-connect/core-common';
 import {
+  BulkDeleteFieldsByIdBody,
   CreateFieldBody,
   DeleteFieldByIdParam,
   FieldDto,
@@ -64,6 +65,17 @@ export class FieldsController {
     return CoreHttpResponse.success({
       data,
       message: 'Field updated successfully',
+    });
+  }
+
+  @Post('bulk/delete')
+  async bulkDeleteFieldById(
+    @Body() body: BulkDeleteFieldsByIdBody
+  ): Promise<CoreHttpResponse<null>> {
+    const { data } = await this.fieldsService.bulkDeleteFieldsById(body);
+    return CoreHttpResponse.success({
+      data,
+      message: 'Fields deleted successfully',
     });
   }
 

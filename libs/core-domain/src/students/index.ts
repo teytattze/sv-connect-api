@@ -4,6 +4,7 @@ export {
   GetStudentByAccountIdParam,
   GetStudentByIdParam,
 } from './dtos/get-student.dto';
+export { IndexStudentQuery } from './dtos/index-student.dto';
 export { StudentDto, StudentWithProjectDto } from './dtos/student.dto';
 export {
   UpdateStudentBody,
@@ -21,4 +22,5 @@ export type {
 } from './interfaces/student.interface';
 
 export type { ICreateStudentPayload } from './payloads/create-student.payload';
+export type { IIndexStudentFilterPayload } from './payloads/index-student.payload';
 export type { IUpdateStudentPayload } from './payloads/update-student.payload';

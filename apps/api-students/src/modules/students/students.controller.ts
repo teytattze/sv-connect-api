@@ -4,6 +4,7 @@ import { StudentsPattern } from '@sv-connect/app-common';
 import { CoreServiceResponse } from '@sv-connect/core-common';
 import {
   ICreateStudentPayload,
+  IIndexStudentFilterPayload,
   IStudent,
   IStudentsClient,
   IUpdateStudentPayload,
@@ -15,8 +16,10 @@ export class StudentsController implements IStudentsClient {
   constructor(private readonly studentsService: StudentsService) {}
 
   @MessagePattern(StudentsPattern.INDEX_STUDENTS)
-  async indexStudents(): Promise<CoreServiceResponse<IStudent[]>> {
-    const students = await this.studentsService.indexStudents();
+  async indexStudents(
+    @Payload('by') by: IIndexStudentFilterPayload
+  ): Promise<CoreServiceResponse<IStudent[]>> {
+    const students = await this.studentsService.indexStudents(by);
     return CoreServiceResponse.success({ data: students });
   }
 

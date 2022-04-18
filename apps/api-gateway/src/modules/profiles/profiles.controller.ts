@@ -8,6 +8,7 @@ import {
   UpdateProfileByAccountIdParam,
   UpdateProfileBody,
   ProfileDto,
+  UpdateProfileByIdParam,
 } from '@sv-connect/core-domain';
 import { ProfilesService } from './profiles.service';
 
@@ -48,6 +49,15 @@ export class ProfilesController {
     const { data } = await this.profilesService.getProfileByAccountId(
       accountId
     );
+    return CoreHttpResponse.success({ data });
+  }
+
+  @Put('update/:id')
+  async updateProfileById(
+    @Param() { id }: UpdateProfileByIdParam,
+    @Body() body: UpdateProfileBody
+  ): Promise<CoreHttpResponse<ProfileDto>> {
+    const { data } = await this.profilesService.updateProfileById(id, body);
     return CoreHttpResponse.success({ data });
   }
 

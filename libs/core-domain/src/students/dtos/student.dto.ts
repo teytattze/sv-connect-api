@@ -8,7 +8,7 @@ export class StudentDto extends BaseDto implements IStudent {
   accountId: string;
 
   @ApiProperty()
-  supervisorId: string;
+  supervisorId: Nullable<string>;
 }
 
 export class StudentWithProjectDto extends StudentDto {

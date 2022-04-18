@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { StudentsCode } from '@sv-connect/core-common';
+import { Prisma } from '@prisma/client';
+import { Optional, StudentsCode } from '@sv-connect/core-common';
 import {
   ICreateStudentPayload,
+  IIndexStudentFilterPayload,
   IStudent,
   IStudentsService,
   IUpdateStudentPayload,
@@ -15,9 +17,12 @@ import { StudentsRepository } from './students.repository';
 export class StudentsService implements IStudentsService {
   constructor(private readonly studentsRepository: StudentsRepository) {}
 
-  async indexStudents(): Promise<IStudent[]> {
+  async indexStudents(
+    filter?: IIndexStudentFilterPayload
+  ): Promise<IStudent[]> {
+    const by = this.mapFilterToPrismaWhere(filter);
     const [error, students] = await to<IStudent[], any>(
-      this.studentsRepository.findStudents()
+      this.studentsRepository.findStudents(by)
     );
     if (error) handlePrismaError(error);
     return students;
@@ -76,5 +81,24 @@ export class StudentsService implements IStudentsService {
       this.studentsRepository.deleteStudent({ id })
     );
     if (error) handlePrismaError(error);
+  }
+
+  private mapFilterToPrismaWhere(
+    filter: Optional<IIndexStudentFilterPayload>
+  ): Prisma.StudentWhereInput {
+    const result: Prisma.StudentWhereInput = {};
+
+    if (filter?.supervisorId) {
+      result.supervisorId = {
+        ...(result.supervisorId as Prisma.StringFilter),
+        equals: filter.supervisorId,
+      };
+    }
+    if ('hasSupervisor' in filter) {
+      if (filter.hasSupervisor) result.supervisorId = { not: { equals: null } };
+      else result.supervisorId = { equals: null };
+    }
+
+    return result;
   }
 }

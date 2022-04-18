@@ -1,33 +1,33 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { AccountsPattern, ACCOUNTS_CLIENT } from '@sv-connect/app-common';
+import { StudentsPattern, STUDENTS_CLIENT } from '@sv-connect/app-common';
 import {
   CoreRpcException,
   ICoreServiceResponse,
 } from '@sv-connect/core-common';
 import {
-  IAccount,
-  IAccountsClient,
-  IUpdateAccountPayload,
+  IStudent,
+  IStudentsClient,
+  IUpdateStudentPayload,
 } from '@sv-connect/core-domain';
 import to from 'await-to-js';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
-export class AccountsService implements IAccountsClient {
-  constructor(@Inject(ACCOUNTS_CLIENT) private readonly client: ClientProxy) {}
+export class StudentsService implements IStudentsClient {
+  constructor(@Inject(STUDENTS_CLIENT) private readonly client: ClientProxy) {}
 
-  async updateAccountById(
-    accountId: string,
-    payload: IUpdateAccountPayload
-  ): Promise<ICoreServiceResponse<IAccount>> {
+  async udpateStudentById(
+    id: string,
+    payload: IUpdateStudentPayload
+  ): Promise<ICoreServiceResponse<IStudent>> {
     const [error, response] = await to<
-      ICoreServiceResponse<IAccount>,
+      ICoreServiceResponse<IStudent>,
       ICoreServiceResponse<null>
     >(
       firstValueFrom(
-        this.client.send(AccountsPattern.UPDATE_ACCOUNT_BY_ID, {
-          accountId,
+        this.client.send(StudentsPattern.UPDATE_STUDENT_BY_ID, {
+          id,
           data: payload,
         })
       )

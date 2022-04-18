@@ -23,8 +23,9 @@ export class StudentsRepository {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async findStudents(): Promise<IStudent[]> {
+  async findStudents(by?: Prisma.StudentWhereInput): Promise<IStudent[]> {
     return (await this.prisma.student.findMany({
+      where: by,
       select: this.defaultSelect,
     })) as IStudent[];
   }
