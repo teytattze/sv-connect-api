@@ -6,7 +6,16 @@
         "operationId": "indexAccounts",
         "summary": "",
         "description": "Index all user accounts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "hasSupervisor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Index",
@@ -466,7 +475,31 @@
         ]
       }
     },
-    "/api/matches/single/students": {
+    "/api/matches/accept": {
+      "post": {
+        "operationId": "acceptMatches",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptMatchesBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Matches"
+        ]
+      }
+    },
+    "/api/matches/single/student": {
       "post": {
         "operationId": "matchSingleStudent",
         "parameters": [],
@@ -939,6 +972,14 @@
         "operationId": "indexStudents",
         "parameters": [
           {
+            "name": "hasProject",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
             "name": "hasSupervisor",
             "required": false,
             "in": "query",
@@ -1067,6 +1108,29 @@
         },
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supervisors"
+        ]
+      }
+    },
+    "/api/supervisors/{id}": {
+      "get": {
+        "operationId": "getSupervisorById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
             "description": ""
           }
         },
@@ -1334,6 +1398,210 @@
         },
         "required": [
           "ids"
+        ]
+      },
+      "FieldEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "title"
+        ]
+      },
+      "SpecializationEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "title"
+        ]
+      },
+      "ProjectDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "studentId": {
+            "type": "string"
+          },
+          "field": {
+            "$ref": "#/components/schemas/FieldEntity"
+          },
+          "specializations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpecializationEntity"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "title",
+          "summary",
+          "studentId",
+          "field",
+          "specializations"
+        ]
+      },
+      "StudentWithProjectDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "supervisorId": {
+            "type": "object"
+          },
+          "project": {
+            "$ref": "#/components/schemas/ProjectDto"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "accountId",
+          "supervisorId",
+          "project"
+        ]
+      },
+      "SupervisorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "capacity": {
+            "type": "number"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "field": {
+            "type": "object"
+          },
+          "specializations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "capacity",
+          "accountId",
+          "field",
+          "specializations"
+        ]
+      },
+      "MatchDto": {
+        "type": "object",
+        "properties": {
+          "student": {
+            "$ref": "#/components/schemas/StudentWithProjectDto"
+          },
+          "supervisor": {
+            "$ref": "#/components/schemas/SupervisorDto"
+          },
+          "isApproved": {
+            "type": "boolean"
+          },
+          "isMatched": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "student",
+          "supervisor",
+          "isApproved",
+          "isMatched"
+        ]
+      },
+      "AcceptMatchesBody": {
+        "type": "object",
+        "properties": {
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchDto"
+            }
+          }
+        },
+        "required": [
+          "matches"
         ]
       },
       "MatchSingleStudentBody": {

@@ -16,7 +16,7 @@ export type { IInvitation } from './interfaces/invitation.interface';
 export type { IInvitationsService } from './interfaces/service.interface';
 
 export type { ICreateInvitationPayload } from './payloads/create-invitation.payload';
-export type { IIndexInvitationFilterPayload } from './payloads/index-invitations.payload';
+export type { IIndexInvitationFilter } from './payloads/index-invitations.payload';
 export type {
   IBulkRejectInvitationsByIdPayload,
   IUpdateInvitationPayload,

@@ -1,6 +1,6 @@
 import { ICoreServiceResponse } from '@sv-connect/core-common';
 import { ICreateInvitationPayload } from '../payloads/create-invitation.payload';
-import { IIndexInvitationFilterPayload } from '../payloads/index-invitations.payload';
+import { IIndexInvitationFilter } from '../payloads/index-invitations.payload';
 import { IBulkRejectInvitationsByIdPayload } from '../payloads/update-invitation.payload';
 import { IInvitation } from './invitation.interface';
 
@@ -9,7 +9,7 @@ export interface IInvitationsClient {
     payload: ICreateInvitationPayload
   ): Promise<ICoreServiceResponse<IInvitation>>;
   indexInvitations(
-    by?: IIndexInvitationFilterPayload
+    by?: IIndexInvitationFilter
   ): Promise<ICoreServiceResponse<IInvitation[]>>;
   acceptInvitationById?(id: string): Promise<ICoreServiceResponse<IInvitation>>;
   bulkRejectInvitationsById?(

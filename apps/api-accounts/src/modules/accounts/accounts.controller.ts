@@ -6,6 +6,7 @@ import {
   IAccount,
   IAccountsClient,
   ICreateAccountPayload,
+  IIndexAccountsFilter,
   IUpdateAccountPayload,
 } from '@sv-connect/core-domain';
 import { AccountsService } from './accounts.service';
@@ -15,8 +16,10 @@ export class AccountsController implements IAccountsClient {
   constructor(private readonly accountsService: AccountsService) {}
 
   @MessagePattern(AccountsPattern.INDEX_ACCOUNTS)
-  async indexAccounts(): Promise<CoreServiceResponse<IAccount[]>> {
-    const accounts = await this.accountsService.indexAccounts();
+  async indexAccounts(
+    @Payload('by') by?: IIndexAccountsFilter
+  ): Promise<CoreServiceResponse<IAccount[]>> {
+    const accounts = await this.accountsService.indexAccounts(by);
     return CoreServiceResponse.success({ data: accounts });
   }
 

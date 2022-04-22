@@ -24,8 +24,9 @@ export class AccountsRepository {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAccounts(): Promise<IAccount[]> {
+  async findAccounts(by?: Prisma.AccountWhereInput): Promise<IAccount[]> {
     return (await this.prisma.account.findMany({
+      where: by,
       select: this.defaultSelect,
     })) as IAccount[];
   }

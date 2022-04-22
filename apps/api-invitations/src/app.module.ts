@@ -5,6 +5,7 @@ import {
   IClientsProviderOptions,
   PrismaModule,
   STUDENTS_CLIENT,
+  SUPERVISORS_CLIENT,
 } from '@sv-connect/app-common';
 import config from 'config';
 import { InvitationsModule } from './modules/invitations/invitations.module';
@@ -18,6 +19,10 @@ const clientsProviderOptions: IClientsProviderOptions[] = [
   {
     provide: STUDENTS_CLIENT,
     transport: config.get('microservices.students'),
+  },
+  {
+    provide: SUPERVISORS_CLIENT,
+    transport: config.get('microservices.supervisors'),
   },
 ];
 

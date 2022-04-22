@@ -6,9 +6,10 @@ import {
   ICoreServiceResponse,
 } from '@sv-connect/core-common';
 import {
-  IIndexSupervisorsFilterPayload,
+  IIndexSupervisorsFilter,
   ISupervisor,
   ISupervisorsClient,
+  IUpdateSupervisorPayload,
 } from '@sv-connect/core-domain';
 import to from 'await-to-js';
 import { firstValueFrom } from 'rxjs';
@@ -20,7 +21,7 @@ export class SupervisorsService implements ISupervisorsClient {
   ) {}
 
   async indexSupervisor(
-    by: IIndexSupervisorsFilterPayload
+    by: IIndexSupervisorsFilter
   ): Promise<ICoreServiceResponse<ISupervisor[]>> {
     const [error, response] = await to<
       ICoreServiceResponse<ISupervisor[]>,
@@ -43,6 +44,25 @@ export class SupervisorsService implements ISupervisorsClient {
     >(
       firstValueFrom(
         this.client.send(SupervisorsPattern.GET_SUPERVISOR_BY_ID, { id })
+      )
+    );
+    if (error) throw CoreRpcException.fromService(error);
+    return response;
+  }
+
+  async updateSupervisorById(
+    id: string,
+    payload: IUpdateSupervisorPayload
+  ): Promise<ICoreServiceResponse<ISupervisor>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<ISupervisor>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(SupervisorsPattern.UPDATE_SUPERVISOR_BY_ID, {
+          id,
+          data: payload,
+        })
       )
     );
     if (error) throw CoreRpcException.fromService(error);

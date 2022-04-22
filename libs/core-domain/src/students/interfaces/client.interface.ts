@@ -1,12 +1,12 @@
 import { ICoreServiceResponse } from '@sv-connect/core-common';
 import { ICreateStudentPayload } from '../payloads/create-student.payload';
-import { IIndexStudentFilterPayload } from '../payloads/index-student.payload';
+import { IIndexStudentFilter } from '../payloads/index-student.payload';
 import { IUpdateStudentPayload } from '../payloads/update-student.payload';
 import { IStudent } from './student.interface';
 
 export interface IStudentsClient {
   indexStudents?(
-    filter?: IIndexStudentFilterPayload
+    filter?: IIndexStudentFilter
   ): Promise<ICoreServiceResponse<IStudent[]>>;
   getStudentById?(id: string): Promise<ICoreServiceResponse<IStudent>>;
   getStudentByAccountId?(
@@ -15,7 +15,7 @@ export interface IStudentsClient {
   createStudent?(
     payload: ICreateStudentPayload
   ): Promise<ICoreServiceResponse<IStudent>>;
-  udpateStudentById?(
+  updateStudentById?(
     id: string,
     payload: IUpdateStudentPayload
   ): Promise<ICoreServiceResponse<IStudent>>;

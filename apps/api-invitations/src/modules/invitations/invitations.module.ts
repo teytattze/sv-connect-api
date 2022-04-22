@@ -3,9 +3,10 @@ import { InvitationsService } from './invitations.service';
 import { InvitationsRepository } from './invitations.repository';
 import { InvitationsController } from './invitations.controller';
 import { StudentsModule } from '../students/students.module';
+import { SupervisorsModule } from '../supervisors/supervisors.module';
 
 @Module({
-  imports: [StudentsModule],
+  imports: [StudentsModule, SupervisorsModule],
   controllers: [InvitationsController],
   providers: [InvitationsService, InvitationsRepository],
 })

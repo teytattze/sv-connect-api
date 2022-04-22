@@ -1,9 +1,14 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ToBoolean } from '@sv-connect/app-common';
 import { IsOptional, IsUUID } from 'class-validator';
-import { IIndexStudentFilterPayload } from '../payloads/index-student.payload';
+import { IIndexStudentFilter } from '../payloads/index-student.payload';
 
-export class IndexStudentQuery implements IIndexStudentFilterPayload {
+export class IndexStudentQuery implements IIndexStudentFilter {
+  @IsOptional()
+  @ToBoolean()
+  @ApiPropertyOptional()
+  hasProject?: boolean;
+
   @IsOptional()
   @ToBoolean()
   @ApiPropertyOptional()

@@ -2,12 +2,12 @@ import {
   ICreateSupervisorPayload,
   IRegisterSupervisorPayload,
 } from '../payloads/create-supervisor.payload';
-import { IIndexSupervisorsFilterPayload } from '../payloads/index-supervisors.payload';
+import { IIndexSupervisorsFilter } from '../payloads/index-supervisors.payload';
 import { IUpdateSupervisorPayload } from '../payloads/update-supervisor.payload';
 import { ISupervisor } from './supervisor.interface';
 
 export interface ISupervisorsService {
-  indexSupervisors(by?: IIndexSupervisorsFilterPayload): Promise<ISupervisor[]>;
+  indexSupervisors(by?: IIndexSupervisorsFilter): Promise<ISupervisor[]>;
   getSupervisorById(id: string): Promise<ISupervisor>;
   getSupervisorByAccountId(accountId: string): Promise<ISupervisor>;
   createSupervisor(payload: ICreateSupervisorPayload): Promise<ISupervisor>;

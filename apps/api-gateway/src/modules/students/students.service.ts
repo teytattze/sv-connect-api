@@ -7,7 +7,7 @@ import {
 } from '@sv-connect/core-common';
 import {
   ICreateStudentPayload,
-  IIndexStudentFilterPayload,
+  IIndexStudentFilter,
   IStudent,
   IStudentsClient,
 } from '@sv-connect/core-domain';
@@ -20,7 +20,7 @@ export class StudentsService implements IStudentsClient {
   constructor(@Inject(STUDENTS_CLIENT) private readonly client: ClientProxy) {}
 
   async indexStudents(
-    by?: IIndexStudentFilterPayload
+    by?: IIndexStudentFilter
   ): Promise<ICoreServiceResponse<IStudent[]>> {
     const [error, response] = await to<
       ICoreServiceResponse<IStudent[]>,

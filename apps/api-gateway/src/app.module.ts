@@ -5,7 +5,7 @@ import {
   FIELDS_CLIENT,
   IClientsProviderOptions,
   INVITATIONS_CLIENT,
-  MATCH_CLIENT,
+  MATCHES_CLIENT,
   PROFILES_CLIENT,
   PROJECTS_CLIENT,
   SPECIALIZATIONS_CLIENT,
@@ -39,7 +39,7 @@ const clientsProviderOptions: IClientsProviderOptions[] = [
     transport: config.get('microservices.invitations'),
   },
   {
-    provide: MATCH_CLIENT,
+    provide: MATCHES_CLIENT,
     transport: config.get('microservices.match'),
   },
   {

@@ -6,7 +6,7 @@ import { CoreServiceResponse } from '@sv-connect/core-common';
 import {
   IBulkRejectInvitationsByIdPayload,
   ICreateInvitationPayload,
-  IIndexInvitationFilterPayload,
+  IIndexInvitationFilter,
   IInvitation,
   IInvitationsClient,
 } from '@sv-connect/core-domain';
@@ -17,7 +17,7 @@ export class InvitationsController implements IInvitationsClient {
 
   @MessagePattern(InvitationsPattern.INDEX_INVITATIONS)
   async indexInvitations(
-    @Payload('by') by?: IIndexInvitationFilterPayload
+    @Payload('by') by?: IIndexInvitationFilter
   ): Promise<CoreServiceResponse<IInvitation[]>> {
     const invitations = await this.invitationsService.indexInvitations(by);
     return CoreServiceResponse.success({ data: invitations });

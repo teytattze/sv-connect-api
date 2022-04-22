@@ -6,6 +6,7 @@ export {
   AdminGetAccountByEmailParam,
   CreateAccountBody,
   DeleteAccountByIdParam,
+  IndexAccountsQuery,
   GetAccountByEmailParam,
   GetAccountByIdParam,
   UpdateAccountBody,
@@ -18,6 +19,7 @@ export type {
   IAdminAccountsClient,
   IAdminAccountsService,
   ICreateAccountPayload,
+  IIndexAccountsFilter,
   IUpdateAccountPayload,
 } from './accounts';
 
@@ -62,7 +64,7 @@ export {
 export type {
   IBulkRejectInvitationsByIdPayload,
   ICreateInvitationPayload,
-  IIndexInvitationFilterPayload,
+  IIndexInvitationFilter,
   IInvitation,
   IInvitationsClient,
   IInvitationsService,
@@ -70,12 +72,14 @@ export type {
 } from './invitations';
 
 export {
+  AcceptMatchesBody,
   MatchDto,
   MatchSelectedStudentsAndSupervisorsBody,
   MatchSelectedStudentsBody,
   MatchSingleStudentBody,
 } from './matches';
 export type {
+  IAcceptMatchesPayload,
   IMatch,
   IMatchesClient,
   IMatchSingleStudentPayload,
@@ -151,7 +155,7 @@ export {
 } from './students';
 export type {
   ICreateStudentPayload,
-  IIndexStudentFilterPayload,
+  IIndexStudentFilter,
   IStudent,
   IStudentsClient,
   IStudentsService,
@@ -174,7 +178,7 @@ export {
 } from './supervisors';
 export type {
   ICreateSupervisorPayload,
-  IIndexSupervisorsFilterPayload,
+  IIndexSupervisorsFilter,
   IRegisterSupervisorPayload,
   ISupervisor,
   ISupervisorsClient,

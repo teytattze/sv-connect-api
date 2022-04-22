@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 import { SupervisorsCode } from '@sv-connect/core-common';
 import {
   ICreateSupervisorPayload,
-  IIndexSupervisorsFilterPayload,
+  IIndexSupervisorsFilter,
   IRegisterSupervisorPayload,
   ISupervisor,
   ISupervisorsService,
@@ -19,7 +19,7 @@ export class SupervisorsService implements ISupervisorsService {
   constructor(private readonly supervisorsRepository: SupervisorsRepository) {}
 
   async indexSupervisors(
-    filter?: IIndexSupervisorsFilterPayload
+    filter?: IIndexSupervisorsFilter
   ): Promise<ISupervisor[]> {
     const where = this.mapFilterToPrismaWhere(filter);
     const [error, supervisors] = await to<ISupervisor[], any>(
@@ -99,7 +99,7 @@ export class SupervisorsService implements ISupervisorsService {
   }
 
   private mapFilterToPrismaWhere(
-    filter?: IIndexSupervisorsFilterPayload
+    filter?: IIndexSupervisorsFilter
   ): Prisma.SupervisorWhereInput {
     const result: Prisma.SupervisorWhereInput = {
       capacity: {},

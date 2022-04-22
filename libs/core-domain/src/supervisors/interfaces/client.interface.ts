@@ -3,13 +3,13 @@ import {
   ICreateSupervisorPayload,
   IRegisterSupervisorPayload,
 } from '../payloads/create-supervisor.payload';
-import { IIndexSupervisorsFilterPayload } from '../payloads/index-supervisors.payload';
+import { IIndexSupervisorsFilter } from '../payloads/index-supervisors.payload';
 import { IUpdateSupervisorPayload } from '../payloads/update-supervisor.payload';
 import { ISupervisor } from './supervisor.interface';
 
 export interface ISupervisorsClient {
   indexSupervisors?(
-    by?: IIndexSupervisorsFilterPayload
+    by?: IIndexSupervisorsFilter
   ): Promise<ICoreServiceResponse<ISupervisor[]>>;
   getSupervisorById?(id: string): Promise<ICoreServiceResponse<ISupervisor>>;
   getSupervisorByAccountId?(

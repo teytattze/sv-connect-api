@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CoreRpcException, MatchesCode } from '@sv-connect/core-common';
 import {
+  IAcceptMatchesPayload,
   IMatch,
   IMatchesService,
   IMatchSelectedStudentsAndSupervisorsPayload,
   IMatchSelectedStudentsPayload,
   IMatchSingleStudentPayload,
+  IStudent,
   IStudentWithProject,
   ISupervisor,
 } from '@sv-connect/core-domain';
@@ -17,6 +19,8 @@ import { StudentsService } from '../students/students.service';
 import { SupervisorsService } from '../supervisors/supervisors.service';
 import { MatchesHelper } from './matches.helper';
 
+// TODO: handle null field
+
 @Injectable()
 export class MatchesService implements IMatchesService {
   constructor(
@@ -27,11 +31,37 @@ export class MatchesService implements IMatchesService {
     private readonly supervisorsService: SupervisorsService
   ) {}
 
+  async acceptMatches(payload: IAcceptMatchesPayload): Promise<IStudent[]> {
+    const { matches } = payload;
+    const supervisorsCapacity =
+      this.matchesHelper.makeCapacityBySupervisorIdClusters(matches);
+    const supervisorIds = Array.from(supervisorsCapacity.keys());
+    const supervisorPromises = supervisorIds.map((id) =>
+      this.supervisorsService.updateSupervisorById(id, {
+        capacity: supervisorsCapacity.get(id),
+      })
+    );
+    const studentPromises = matches
+      .filter((match) => match.isMatched)
+      .map((match) =>
+        this.studentsService.updateStudentById(match.student.id, {
+          supervisor: { id: match.supervisor.id },
+        })
+      );
+    await Promise.all(supervisorPromises);
+    const studentsRes = await Promise.all(studentPromises);
+    return studentsRes.map((res) => res.data);
+  }
+
   async matchSingleStudent({ studentId }: IMatchSingleStudentPayload) {
     const student = await this.getStudentWithProjectByStudentId(studentId);
     const { data: supervisors } = await this.supervisorsService.indexSupervisor(
       { fieldId: student.project.field.id, minCapacity: 1 }
     );
+
+    if (!supervisors || supervisors.length === 0)
+      throw CoreRpcException.new(MatchesCode.SUPERVISOR_NOT_AVAILABLE);
+
     const weightages = this.matchesHelper.getProjectAndSupervisorsWeightages(
       student.project,
       supervisors

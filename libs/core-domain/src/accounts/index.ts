@@ -3,6 +3,7 @@ export { AccountRole } from '@prisma/client';
 export { ACCOUNT_COOKIE_NAME } from './constants/account.const';
 
 export { AccountDto } from './dtos/account.dto';
+export { IndexAccountsQuery } from './dtos/index-accounts.dto';
 export {
   GetAccountByEmailParam,
   GetAccountByIdParam,
@@ -29,4 +30,5 @@ export type {
 } from './interfaces/service.interface';
 
 export type { ICreateAccountPayload } from './payloads/create-account.payload';
+export type { IIndexAccountsFilter } from './payloads/index-accounts.payload';
 export type { IUpdateAccountPayload } from './payloads/update-account.payload';

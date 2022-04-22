@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CoreHttpResponse } from '@sv-connect/core-common';
@@ -17,6 +18,7 @@ import {
   GetAccountByIdParam,
   UpdateAccountByIdParam,
   UpdateAccountBody,
+  IndexAccountsQuery,
 } from '@sv-connect/core-domain';
 import { AccountsService } from './accounts.service';
 
@@ -36,8 +38,10 @@ export class AccountsController {
     operationId: 'indexAccounts',
     description: 'Index all user accounts',
   })
-  async indexAccount(): Promise<CoreHttpResponse<AccountDto[]>> {
-    const { data } = await this.accountsService.indexAccounts();
+  async indexAccount(
+    @Query() query: IndexAccountsQuery
+  ): Promise<CoreHttpResponse<AccountDto[]>> {
+    const { data } = await this.accountsService.indexAccounts(query);
     return CoreHttpResponse.success({ data });
   }
 

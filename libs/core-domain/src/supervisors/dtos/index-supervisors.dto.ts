@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { IIndexSupervisorsFilterPayload } from '../payloads/index-supervisors.payload';
+import { IIndexSupervisorsFilter } from '../payloads/index-supervisors.payload';
 
-export class IndexSupervisorsQuery implements IIndexSupervisorsFilterPayload {
+export class IndexSupervisorsQuery implements IIndexSupervisorsFilter {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional()

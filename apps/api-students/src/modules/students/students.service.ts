@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 import { Optional, StudentsCode } from '@sv-connect/core-common';
 import {
   ICreateStudentPayload,
-  IIndexStudentFilterPayload,
+  IIndexStudentFilter,
   IStudent,
   IStudentsService,
   IUpdateStudentPayload,
@@ -17,9 +17,7 @@ import { StudentsRepository } from './students.repository';
 export class StudentsService implements IStudentsService {
   constructor(private readonly studentsRepository: StudentsRepository) {}
 
-  async indexStudents(
-    filter?: IIndexStudentFilterPayload
-  ): Promise<IStudent[]> {
+  async indexStudents(filter?: IIndexStudentFilter): Promise<IStudent[]> {
     const by = this.mapFilterToPrismaWhere(filter);
     const [error, students] = await to<IStudent[], any>(
       this.studentsRepository.findStudents(by)
@@ -84,7 +82,7 @@ export class StudentsService implements IStudentsService {
   }
 
   private mapFilterToPrismaWhere(
-    filter: Optional<IIndexStudentFilterPayload>
+    filter: Optional<IIndexStudentFilter>
   ): Prisma.StudentWhereInput {
     const result: Prisma.StudentWhereInput = {};
 
@@ -97,6 +95,10 @@ export class StudentsService implements IStudentsService {
     if ('hasSupervisor' in filter) {
       if (filter.hasSupervisor) result.supervisorId = { not: { equals: null } };
       else result.supervisorId = { equals: null };
+    }
+    if ('hasProject' in filter) {
+      if (filter.hasProject) result.project = { isNot: null };
+      else result.project = { is: null };
     }
 
     return result;

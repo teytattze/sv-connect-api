@@ -22,5 +22,5 @@ export type {
 } from './interfaces/student.interface';
 
 export type { ICreateStudentPayload } from './payloads/create-student.payload';
-export type { IIndexStudentFilterPayload } from './payloads/index-student.payload';
+export type { IIndexStudentFilter } from './payloads/index-student.payload';
 export type { IUpdateStudentPayload } from './payloads/update-student.payload';

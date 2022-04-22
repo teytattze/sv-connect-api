@@ -4,7 +4,7 @@ import { SupervisorsPattern } from '@sv-connect/app-common';
 import { CoreServiceResponse } from '@sv-connect/core-common';
 import {
   ICreateSupervisorPayload,
-  IIndexSupervisorsFilterPayload,
+  IIndexSupervisorsFilter,
   IRegisterSupervisorPayload,
   ISupervisor,
   ISupervisorsClient,
@@ -18,7 +18,7 @@ export class SupervisorsController implements ISupervisorsClient {
 
   @MessagePattern(SupervisorsPattern.INDEX_SUPERVISORS)
   async indexSupervisors(
-    @Payload('by') by: IIndexSupervisorsFilterPayload
+    @Payload('by') by?: IIndexSupervisorsFilter
   ): Promise<CoreServiceResponse<ISupervisor[]>> {
     const supervisors = await this.supervisorsService.indexSupervisors(by);
     return CoreServiceResponse.success({ data: supervisors });

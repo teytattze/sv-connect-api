@@ -1,23 +1,42 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { MatchPattern, MATCH_CLIENT } from '@sv-connect/app-common';
+import { MatchesPattern, MATCHES_CLIENT } from '@sv-connect/app-common';
 import {
   CoreHttpException,
   ICoreServiceResponse,
 } from '@sv-connect/core-common';
 import {
+  IAcceptMatchesPayload,
   IMatch,
   IMatchesClient,
   IMatchSelectedStudentsAndSupervisorsPayload,
   IMatchSelectedStudentsPayload,
   IMatchSingleStudentPayload,
+  IStudent,
 } from '@sv-connect/core-domain';
 import to from 'await-to-js';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class MatchesService implements IMatchesClient {
-  constructor(@Inject(MATCH_CLIENT) private readonly client: ClientProxy) {}
+  constructor(@Inject(MATCHES_CLIENT) private readonly client: ClientProxy) {}
+
+  async acceptMatches(
+    payload: IAcceptMatchesPayload
+  ): Promise<ICoreServiceResponse<IStudent[]>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<IStudent[]>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(MatchesPattern.ACCEPT_MATCHES, {
+          data: payload,
+        })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
 
   async matchSingleStudent({
     studentId,
@@ -27,7 +46,7 @@ export class MatchesService implements IMatchesClient {
       ICoreServiceResponse<null>
     >(
       firstValueFrom(
-        this.client.send(MatchPattern.MATCH_SINGLE_STUDENT, {
+        this.client.send(MatchesPattern.MATCH_SINGLE_STUDENT, {
           data: { studentId },
         })
       )
@@ -44,7 +63,7 @@ export class MatchesService implements IMatchesClient {
       ICoreServiceResponse<null>
     >(
       firstValueFrom(
-        this.client.send(MatchPattern.MATCH_SELECTED_STUDENTS, {
+        this.client.send(MatchesPattern.MATCH_SELECTED_STUDENTS, {
           data: { studentIds },
         })
       )
@@ -64,12 +83,15 @@ export class MatchesService implements IMatchesClient {
       ICoreServiceResponse<null>
     >(
       firstValueFrom(
-        this.client.send(MatchPattern.MATCH_SELECTED_STUDENTS_AND_SUPERVISORS, {
-          data: {
-            studentIds,
-            supervisorIds,
-          },
-        })
+        this.client.send(
+          MatchesPattern.MATCH_SELECTED_STUDENTS_AND_SUPERVISORS,
+          {
+            data: {
+              studentIds,
+              supervisorIds,
+            },
+          }
+        )
       )
     );
     if (error) throw CoreHttpException.fromService(error);

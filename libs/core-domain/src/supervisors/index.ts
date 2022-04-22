@@ -25,5 +25,5 @@ export type {
   ICreateSupervisorPayload,
   IRegisterSupervisorPayload,
 } from './payloads/create-supervisor.payload';
-export type { IIndexSupervisorsFilterPayload } from './payloads/index-supervisors.payload';
+export type { IIndexSupervisorsFilter } from './payloads/index-supervisors.payload';
 export type { IUpdateSupervisorPayload } from './payloads/update-supervisor.payload';

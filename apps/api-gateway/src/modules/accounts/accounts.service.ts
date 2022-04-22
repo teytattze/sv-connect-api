@@ -9,6 +9,7 @@ import {
   IAccount,
   IAccountsClient,
   ICreateAccountPayload,
+  IIndexAccountsFilter,
   IUpdateAccountPayload,
 } from '@sv-connect/core-domain';
 import to from 'await-to-js';
@@ -33,11 +34,13 @@ export class AccountsService implements IAccountsClient {
     return account;
   }
 
-  async indexAccounts(): Promise<ICoreServiceResponse<IAccount[]>> {
+  async indexAccounts(
+    by?: IIndexAccountsFilter
+  ): Promise<ICoreServiceResponse<IAccount[]>> {
     const [error, accounts] = await to<
       ICoreServiceResponse<IAccount[]>,
       ICoreServiceResponse<null>
-    >(firstValueFrom(this.client.send(AccountsPattern.INDEX_ACCOUNTS, {})));
+    >(firstValueFrom(this.client.send(AccountsPattern.INDEX_ACCOUNTS, { by })));
     if (error) throw CoreHttpException.fromService(error);
     return accounts;
   }

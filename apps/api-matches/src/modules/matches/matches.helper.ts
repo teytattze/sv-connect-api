@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  IMatch,
   IProject,
   IStudentWithProject,
   ISupervisor,
@@ -80,6 +81,25 @@ export class MatchesHelper {
       const fieldId = supervisor.field.id;
       if (!result.has(fieldId)) result.set(fieldId, []);
       for (let i = 0; i < capacity; i++) result.get(fieldId).push(supervisor);
+    });
+    return result;
+  };
+
+  makeCapacityBySupervisorIdClusters = (
+    matches: IMatch[]
+  ): Map<string, number> => {
+    const result = new Map<string, number>();
+    matches.forEach((match) => {
+      if (!match.isMatched) return;
+      const supervisorId = match.supervisor.id;
+      const capacity = match.supervisor.capacity;
+      result.set(supervisorId, capacity);
+    });
+    matches.forEach((match) => {
+      if (!match.isMatched) return;
+      const supervisorId = match.supervisor.id;
+      const capacity = result.get(supervisorId);
+      result.set(supervisorId, capacity - 1);
     });
     return result;
   };

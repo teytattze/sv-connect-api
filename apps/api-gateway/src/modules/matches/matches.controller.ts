@@ -2,10 +2,12 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CoreHttpResponse } from '@sv-connect/core-common';
 import {
+  AcceptMatchesBody,
   MatchDto,
   MatchSelectedStudentsAndSupervisorsBody,
   MatchSelectedStudentsBody,
   MatchSingleStudentBody,
+  StudentDto,
 } from '@sv-connect/core-domain';
 import { MatchesService } from './matches.service';
 
@@ -14,7 +16,15 @@ import { MatchesService } from './matches.service';
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
 
-  @Post('single/students')
+  @Post('accept')
+  async acceptMatches(
+    @Body() { matches }: AcceptMatchesBody
+  ): Promise<CoreHttpResponse<StudentDto[]>> {
+    const { data } = await this.matchesService.acceptMatches({ matches });
+    return CoreHttpResponse.success({ data });
+  }
+
+  @Post('single/student')
   async matchSingleStudent(
     @Body() { studentId }: MatchSingleStudentBody
   ): Promise<CoreHttpResponse<MatchDto>> {

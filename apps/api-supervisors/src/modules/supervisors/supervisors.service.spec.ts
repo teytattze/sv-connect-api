@@ -5,7 +5,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaErrorCode, SupervisorsCode } from '@sv-connect/core-common';
 import {
   ICreateSupervisorPayload,
-  IIndexSupervisorsFilterPayload,
+  IIndexSupervisorsFilter,
   ISupervisor,
 } from '@sv-connect/core-domain';
 import { mockSupervisors } from '../../mocks/supervisors.mock';
@@ -52,7 +52,7 @@ describe('SupervisorsService', () => {
     });
 
     it('should return supervisors with capacity more than or equal to 5', async () => {
-      const indexPayload: IIndexSupervisorsFilterPayload = {
+      const indexPayload: IIndexSupervisorsFilter = {
         minCapacity: 5,
       };
       mockSupervisorsRepository.findSupervisors.mockResolvedValue(
@@ -108,7 +108,7 @@ describe('SupervisorsService', () => {
     });
 
     it('should return supervisors with capacity less than or equal to 4', async () => {
-      const indexPayload: IIndexSupervisorsFilterPayload = {
+      const indexPayload: IIndexSupervisorsFilter = {
         maxCapacity: 4,
       };
       mockSupervisorsRepository.findSupervisors.mockResolvedValue(
@@ -136,7 +136,7 @@ describe('SupervisorsService', () => {
     });
 
     it('should return supervisors with software engineering field', async () => {
-      const indexPayload: IIndexSupervisorsFilterPayload = {
+      const indexPayload: IIndexSupervisorsFilter = {
         fieldId: '5e000912-9c9a-4445-a980-02c237af4775',
       };
       mockSupervisorsRepository.findSupervisors.mockResolvedValue(

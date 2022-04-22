@@ -7,7 +7,7 @@ import {
 } from '@sv-connect/core-common';
 import {
   ICreateSupervisorPayload,
-  IIndexSupervisorsFilterPayload,
+  IIndexSupervisorsFilter,
   ISupervisor,
   ISupervisorsClient,
   IUpdateSupervisorPayload,
@@ -22,7 +22,7 @@ export class SupervisorsService implements ISupervisorsClient {
   ) {}
 
   async indexSupervisors(
-    by: IIndexSupervisorsFilterPayload
+    by?: IIndexSupervisorsFilter
   ): Promise<ICoreServiceResponse<ISupervisor[]>> {
     const [error, response] = await to<
       ICoreServiceResponse<ISupervisor[]>,
@@ -30,6 +30,23 @@ export class SupervisorsService implements ISupervisorsClient {
     >(
       firstValueFrom(
         this.client.send(SupervisorsPattern.INDEX_SUPERVISORS, { by })
+      )
+    );
+    if (error) throw CoreHttpException.fromService(error);
+    return response;
+  }
+
+  async getSupervisorById(
+    id: string
+  ): Promise<ICoreServiceResponse<ISupervisor>> {
+    const [error, response] = await to<
+      ICoreServiceResponse<ISupervisor>,
+      ICoreServiceResponse<null>
+    >(
+      firstValueFrom(
+        this.client.send(SupervisorsPattern.GET_SUPERVISOR_BY_ID, {
+          id,
+        })
       )
     );
     if (error) throw CoreHttpException.fromService(error);

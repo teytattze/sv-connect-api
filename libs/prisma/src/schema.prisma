@@ -40,7 +40,6 @@ model Supervisor {
   field   Field?  @relation(fields: [fieldId], references: [id], onDelete: SetNull)
   fieldId String? @map("field_id")
 
-  matches         Match[]
   invitations     Invitation[]
   students        Student[]
   specializations Specialization[]
@@ -60,7 +59,6 @@ model Student {
   supervisor   Supervisor? @relation(fields: [supervisorId], references: [id], onDelete: SetNull)
   supervisorId String?     @map("supervisor_id")
 
-  matches     Match[]
   invitations Invitation[]
   project     Project?
 
@@ -156,19 +154,6 @@ model Project {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("projects")
-}
-
-model Match {
-  id     String      @id @default(uuid())
-  status MatchStatus @default(PENDING)
-
-  students    Student[]
-  supervisors Supervisor[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("matches")
 }
 
 enum MatchStatus {

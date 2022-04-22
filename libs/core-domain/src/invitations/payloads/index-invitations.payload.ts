@@ -1,6 +1,6 @@
 import { InvitationStatus } from '@prisma/client';
 
-export interface IIndexInvitationFilterPayload {
+export interface IIndexInvitationFilter {
   studentId?: string;
   supervisorId?: string;
   status?: InvitationStatus;

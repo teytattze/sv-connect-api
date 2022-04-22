@@ -4,6 +4,7 @@ import { CoreHttpResponse } from '@sv-connect/core-common';
 import {
   CreateSupervisorBody,
   GetSupervisorByAccountIdParam,
+  GetSupervisorByIdParam,
   IndexSupervisorsQuery,
   SupervisorDto,
   UpdateSupervisorBody,
@@ -29,6 +30,14 @@ export class SupervisorsController {
     @Body() body: CreateSupervisorBody
   ): Promise<CoreHttpResponse<SupervisorDto>> {
     const { data } = await this.supervisorsService.createSupervisor(body);
+    return CoreHttpResponse.success({ data });
+  }
+
+  @Get(':id')
+  async getSupervisorById(
+    @Param() { id }: GetSupervisorByIdParam
+  ): Promise<CoreHttpResponse<SupervisorDto>> {
+    const { data } = await this.supervisorsService.getSupervisorById(id);
     return CoreHttpResponse.success({ data });
   }
 

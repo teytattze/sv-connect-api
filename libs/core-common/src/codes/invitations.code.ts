@@ -9,4 +9,16 @@ export class InvitationsCode {
     errorCode: `${ERROR_PREFIX}000`,
     message: 'Invitation not found',
   };
+
+  public static ALREADY_HAVE_SUPERVISOR: ICode = {
+    statusCode: HttpStatus.BAD_REQUEST,
+    errorCode: `${ERROR_PREFIX}001`,
+    message: 'Create invitation failed, you already have a supervisor',
+  };
+
+  public static SUPERVISOR_CAPACITY_EXCEEDED: ICode = {
+    statusCode: HttpStatus.BAD_REQUEST,
+    errorCode: `${ERROR_PREFIX}002`,
+    message: 'Accept invitation failed, your capcity have exceeded the limit',
+  };
 }

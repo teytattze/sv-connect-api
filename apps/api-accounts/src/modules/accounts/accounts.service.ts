@@ -5,6 +5,7 @@ import {
   IAccount,
   IAccountsService,
   ICreateAccountPayload,
+  IIndexAccountsFilter,
   IUpdateAccountPayload,
 } from '@sv-connect/core-domain';
 import bcrypt from 'bcryptjs';
@@ -13,6 +14,7 @@ import to from 'await-to-js';
 import { handlePrismaError } from './accounts.helper';
 import { StudentsService } from '../students/students.service';
 import { SupervisorsService } from '../supervisors/supervisors.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AccountsService implements IAccountsService {
@@ -22,8 +24,11 @@ export class AccountsService implements IAccountsService {
     private readonly supervisorsService: SupervisorsService
   ) {}
 
-  async indexAccounts(): Promise<IAccount[]> {
-    const [error, accounts] = await to(this.accountsRepository.findAccounts());
+  async indexAccounts(by?: IIndexAccountsFilter): Promise<IAccount[]> {
+    const where = this.mapFilterToPrismaWhere(by);
+    const [error, accounts] = await to(
+      this.accountsRepository.findAccounts(where)
+    );
     if (error) handlePrismaError(error);
     return accounts;
   }
@@ -97,5 +102,26 @@ export class AccountsService implements IAccountsService {
   private async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return await bcrypt.hash(password, salt);
+  }
+
+  private mapFilterToPrismaWhere(
+    filter?: IIndexAccountsFilter
+  ): Prisma.AccountWhereInput {
+    const result: Prisma.AccountWhereInput = {
+      role: {},
+      student: {},
+    };
+    if (filter?.role) {
+      result.role = {
+        ...(result.role as Prisma.EnumAccountRoleFilter),
+        equals: filter.role,
+      };
+    }
+    if ('hasSupervisor' in filter) {
+      if (filter.hasSupervisor)
+        result.student.supervisorId = { not: { equals: null } };
+      else result.student.supervisorId = { equals: null };
+    }
+    return result;
   }
 }

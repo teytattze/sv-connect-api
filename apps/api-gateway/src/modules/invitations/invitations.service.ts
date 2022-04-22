@@ -8,7 +8,7 @@ import {
 import {
   IBulkRejectInvitationsByIdPayload,
   ICreateInvitationPayload,
-  IIndexInvitationFilterPayload,
+  IIndexInvitationFilter,
   IInvitation,
   IInvitationsClient,
 } from '@sv-connect/core-domain';
@@ -22,7 +22,7 @@ export class InvitationsService implements IInvitationsClient {
   ) {}
 
   async indexInvitations(
-    by?: IIndexInvitationFilterPayload
+    by?: IIndexInvitationFilter
   ): Promise<ICoreServiceResponse<IInvitation[]>> {
     const [error, response] = await to<
       ICoreServiceResponse<IInvitation[]>,
