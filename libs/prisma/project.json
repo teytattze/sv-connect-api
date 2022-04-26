@@ -7,7 +7,7 @@
       "options": {
         "commands": [
           {
-            "command": "pnpx prisma generate --schema=libs/prisma/src/schema.prisma"
+            "command": "npx prisma generate --schema=libs/prisma/src/schema.prisma"
           }
         ]
       }
@@ -17,7 +17,7 @@
       "options": {
         "commands": [
           {
-            "command": "pnpx prisma migrate dev --schema=libs/prisma/src/schema.prisma"
+            "command": "npx prisma migrate dev --schema=libs/prisma/src/schema.prisma"
           }
         ]
       }
@@ -27,7 +27,7 @@
       "options": {
         "commands": [
           {
-            "command": "pnpx prisma studio --schema=libs/prisma/src/schema.prisma"
+            "command": "npx prisma studio --schema=libs/prisma/src/schema.prisma"
           }
         ]
       }

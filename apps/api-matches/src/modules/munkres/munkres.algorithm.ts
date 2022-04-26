@@ -48,7 +48,8 @@ export class MunkresAlgorithm {
       7: null,
     };
 
-    while (true) {
+    const isDone = true;
+    while (isDone) {
       const func: Nullable<MunkresStepFunc> = steps[step];
       if (!func) break;
       step = func.apply(this);
@@ -71,7 +72,7 @@ export class MunkresAlgorithm {
   private stepOne(): MunkresSteps {
     if (!this.matrix) return 7;
     for (let i = 0; i < this.n; i++) {
-      let minVal = Math.min(...this.matrix[i]);
+      const minVal = Math.min(...this.matrix[i]);
       for (let j = 0; j < this.n; j++) this.matrix[i][j] -= minVal;
     }
     return 2;
@@ -145,7 +146,7 @@ export class MunkresAlgorithm {
 
     let done = false;
     while (!done) {
-      let row = this.findStarInCol(this.path[count][1]);
+      const row = this.findStarInCol(this.path[count][1]);
       if (row >= 0) {
         count++;
         this.path[count][0] = row;
@@ -155,7 +156,7 @@ export class MunkresAlgorithm {
       }
 
       if (!done) {
-        let col = this.findPrimeInRow(this.path[count][0]);
+        const col = this.findPrimeInRow(this.path[count][0]);
         count++;
         this.path[count][0] = this.path[count - 1][0];
         this.path[count][1] = col;
@@ -171,7 +172,7 @@ export class MunkresAlgorithm {
 
   private stepSix(): MunkresSteps {
     if (!this.matrix) return 7;
-    let minVal = this.findSmallest();
+    const minVal = this.findSmallest();
     for (let i = 0; i < this.n; i++) {
       for (let j = 0; j < this.n; j++) {
         if (this.rowCovered[i]) this.matrix[i][j] += minVal;

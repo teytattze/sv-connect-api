@@ -205,7 +205,6 @@ export class MatchesService implements IMatchesService {
   private async getSupervisorsByFieldIds(
     fieldIds: string[]
   ): Promise<ISupervisor[]> {
-    console.log(fieldIds);
     const promises = fieldIds.map((id) =>
       this.supervisorsService.indexSupervisor({
         fieldId: id,
